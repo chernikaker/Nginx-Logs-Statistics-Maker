@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings({"LineLength", "MagicNumber"})
 public class LogRecordParser {
 
     private static final String STANDARD_IP_REGEX = "((?:\\d{1,3}\\.){3}\\d{1,3})";
@@ -19,7 +20,7 @@ public class LogRecordParser {
     private static final String LOG_REGEX = "(\\S+) - (\\S+) \\[(.*?)\\] \\\"(.*?)\\\" (\\d{3}) (\\d+) \\\"(.*?)\\\" \\\"(.*?)\\\"";
     private static final String REQUEST_REGEX = "(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) (.+?) (HTTP\\/\\d+\\.\\d+$)";
 
-    public LogRecord parseLog (String logLine) {
+    public LogRecord parseLog(String logLine) {
         Pattern logPattern = Pattern.compile(LOG_REGEX);
         Matcher logMatcher = logPattern.matcher(logLine);
         if (!logMatcher.matches()) {
@@ -57,7 +58,7 @@ public class LogRecordParser {
             return false;
         }
         String[] ipParts =  ip.split("\\.");
-        for(String ipPart : ipParts) {
+        for (String ipPart : ipParts) {
             int partValue = Integer.parseInt(ipPart);
             if (partValue > 255) {
                 return false;
@@ -70,18 +71,21 @@ public class LogRecordParser {
         if (!ip.matches(IPV6_SYMBOLS_REGEX)) {
             return false;
         }
-        String[] partsWithNoEmptyBlocks =  ip.split("::",-1);
-        if(partsWithNoEmptyBlocks.length > 2) return false;
+        String[] partsWithNoEmptyBlocks =  ip.split("::", -1);
+        if (partsWithNoEmptyBlocks.length > 2) {
+            return false;
+        }
         boolean emptyParts = ip.contains("::");
         List<String> ipParts = new ArrayList<>();
-        for(String ipPart : partsWithNoEmptyBlocks) {
-             Collections.addAll(ipParts,ipPart.split(":"));
+        for (String ipPart : partsWithNoEmptyBlocks) {
+             Collections.addAll(ipParts, ipPart.split(":"));
         }
-        for(String part : ipParts){
-            if(part.length()>4) return false;
+        for (String part : ipParts) {
+            if (part.length() > 4) {
+                return false;
+            }
         }
-        if (!emptyParts) return  ipParts.size() == 8;
-        return  ipParts.size() < 8;
+        return (!emptyParts && ipParts.size() == 8) || (emptyParts && ipParts.size() < 8);
     }
 
     private LocalDateTime parseDateFromLogFormat(String logDate) {

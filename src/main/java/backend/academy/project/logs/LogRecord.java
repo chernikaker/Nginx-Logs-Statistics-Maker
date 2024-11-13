@@ -2,13 +2,14 @@ package backend.academy.project.logs;
 
 import java.time.LocalDateTime;
 
-public record LogRecord
-    (String remoteAddress,
+@SuppressWarnings("RecordComponentNumber")
+public record LogRecord(
+     String remoteAddress,
      String remoteUser,
      LocalDateTime timeLocal,
      RequestType requestType,
      String requestedResource,
-     String HTTPVersion,
+     String httpVersion,
      int status,
      int bytesSent,
      String httpReferer,
