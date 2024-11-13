@@ -1,6 +1,6 @@
 package backend.academy.project.readers;
 
-import java.io.FileNotFoundException;
+import backend.academy.project.readers.exception.LogFilesNotFound;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class FileSearcher {
 
-    public static List<Path> getLogFiles(String globPattern, Path root) throws FileNotFoundException{
+    public  List<Path> getLogFiles(String globPattern, Path root) {
 
         List<Path> logFiles = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class FileSearcher {
                 FileSystem fs = FileSystems.getDefault();
                 String newGlobPattern = globPattern.startsWith("**\\") ? globPattern : "**/" + globPattern;
 
-                PathMatcher matcher = fs.getPathMatcher("glob:"+newGlobPattern);
+                PathMatcher matcher = fs.getPathMatcher("glob:" + newGlobPattern);
                 if (matcher.matches(file)) {
                     logFiles.add(file);
                 }
@@ -37,7 +37,7 @@ public class FileSearcher {
             Files.walkFileTree(root, matcherVisitor);
             return logFiles;
         } catch (IOException e) {
-            throw new FileNotFoundException("Error while finding log files from root "+root+" with glob " + globPattern);
+            throw new LogFilesNotFound("Error finding logs from root " + root + " with glob " + globPattern, e);
         }
     }
 }
