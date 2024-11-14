@@ -24,4 +24,8 @@ public class CommandLineArgs {
         description = "Upper bound of logs time",
         converter = ISO8601DateTimeConverter.class)
     private Optional<LocalDateTime> to = Optional.empty();
+
+    @Parameter(names = {"--filename"},
+    description = "Name of the report file")
+    private String filename = "statistics_report";
 }
