@@ -34,9 +34,9 @@ public class LogStatisticsApp {
             }
             StatisticsCollector statistics = new StatisticsCollector();
             LogInfoReport report = statistics.calculateLogStatistics(lines, arguments);
-            StatisticsFileWriter viewer = new SimpleStatisticsWriterFactory().createStatisticsFileWriter(arguments.type());
+            StatisticsFileWriter viewer = new SimpleStatisticsWriterFactory().createStatisticsFileWriter(arguments.type(), arguments.filename());
             viewer.writeResultsToFile(reportPath, report, arguments, processedResources);
-            return "Report is written successfully to file "+ reportPath;
+            return "Report is written successfully to directory "+ reportPath;
         } catch (Exception e) {
             return "Error occured "+e.getMessage();
         }
