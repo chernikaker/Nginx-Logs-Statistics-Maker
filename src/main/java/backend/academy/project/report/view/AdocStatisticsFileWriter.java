@@ -1,9 +1,8 @@
 package backend.academy.project.report.view;
 
-import backend.academy.Main;
 import backend.academy.project.commandline.CommandLineArgs;
-import backend.academy.project.report.data.AnswerCodeContainer;
 import backend.academy.project.report.data.LogInfoReport;
+import static  backend.academy.project.report.data.AnswerCodeContainer.getAnswerInfoByCode;
 import java.util.List;
 import java.util.Map;
 
@@ -33,12 +32,17 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== Common info\n");
         sb.append("[cols=2]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(TABLE_CELL).append("Metric ").append(TABLE_CELL).append("Value").append("\n");
-        sb.append(TABLE_CELL).append("Start date").append('\n').append(TABLE_CELL).append(args.from().isPresent() ? args.from().get() : "-").append("\n");
-        sb.append(TABLE_CELL).append("End date").append('\n').append(TABLE_CELL).append(args.to().isPresent() ? args.to().get() : "-").append("\n");
-        sb.append(TABLE_CELL).append("Request number").append('\n').append(TABLE_CELL).append(report.logsCount()).append("\n");
-        sb.append(TABLE_CELL).append("Average answer size").append('\n').append(TABLE_CELL).append(report.avgAnswerSize()).append("\n");
-        sb.append(TABLE_CELL).append("95p of answer size").append('\n').append(TABLE_CELL).append(report.percentile95AnswerSize()).append("\n");
+        sb.append(addTableHeader(List.of("Metric", "Value")));
+        sb.append(addCell("Date from"));
+        sb.append(addCell(args.from().isPresent() ? args.from().get().toString() : "-"));
+        sb.append(addCell("Date to"));
+        sb.append(addCell(args.to().isPresent() ? args.to().get().toString() : "-"));
+        sb.append(addCell("Logs amount"));
+        sb.append(addCell(String.valueOf(report.logsCount())));
+        sb.append(addCell("Average bytes sent"));
+        sb.append(addCell(String.valueOf(report.avgAnswerSize())));
+        sb.append(addCell("95p bytes sent"));
+        sb.append(addCell(String.valueOf(report.percentile95AnswerSize())));
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
     }
@@ -48,10 +52,11 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== Most frequently used resources (top " + TOP_RESULTS + ")\n");
         sb.append("[cols=2]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(TABLE_CELL).append("Resource ").append(TABLE_CELL).append("Usages").append("\n");
+        sb.append(addTableHeader(List.of("Resource", "Usages")));
         List<Map.Entry<String, Long>> topResources = getTopByFrequency(report.resourceFrequency());
         for (Map.Entry<String, Long> entry : topResources) {
-            sb.append(TABLE_CELL).append(entry.getKey()).append('\n').append(TABLE_CELL).append(entry.getValue()).append("\n");
+            sb.append(addCell(entry.getKey()));
+            sb.append(addCell(entry.getValue().toString()));
         }
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
@@ -62,11 +67,12 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== Most frequently appeared answer codes (top " + TOP_RESULTS + ")\n");
         sb.append("[cols=3]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(TABLE_CELL).append("Code ").append(TABLE_CELL).append("Description ").append(TABLE_CELL).append("Amount").append("\n");
+        sb.append(addTableHeader(List.of("Code", "Description", "Amount")));
         List<Map.Entry<Integer, Long>> topAnswers = getTopByFrequency(report.codeAnswerFrequency());
         for (Map.Entry<Integer, Long> entry : topAnswers) {
-            sb.append(TABLE_CELL+'\n').append(entry.getKey()).append(TABLE_CELL+'\n').append(AnswerCodeContainer.getAnswerInfoByCode(
-                entry.getKey())).append(TABLE_CELL+'\n').append(entry.getValue()).append("\n");
+            sb.append(addCell(entry.getKey().toString()));
+            sb.append(addCell(getAnswerInfoByCode(entry.getKey())));
+            sb.append(addCell(entry.getValue().toString()));
         }
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
@@ -75,13 +81,26 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
     private String makeSourceTable(List<String> sources) {
         StringBuilder sb = new StringBuilder();
         sb.append("== Processed source files or URL\n");
-        sb.append("[cols=2]").append('\n');
+        sb.append("[cols=1]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(TABLE_CELL).append("Source ").append("\n");
+        sb.append(addTableHeader(List.of("Source")));
         for (String source : sources) {
-            sb.append(TABLE_CELL).append(source).append("\n");
+            sb.append(addCell(source));
         }
         sb.append(TABLE_BORDER).append('\n');
+        return sb.toString();
+    }
+
+    private String addCell(String data){
+        return TABLE_CELL + data + '\n';
+    }
+
+    private String addTableHeader(List<String> names) {
+        StringBuilder sb = new StringBuilder();
+        for (String name : names) {
+            sb.append(TABLE_CELL).append(name).append(' ');
+        }
+        sb.append('\n');
         return sb.toString();
     }
 }
