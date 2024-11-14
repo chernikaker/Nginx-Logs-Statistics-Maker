@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 
 public class StatisticsCollector {
 
-
     public LogInfoReport calculateLogStatistics(Stream<LogRecord> logRecords, CommandLineArgs args) {
 
         Predicate<LogRecord> checkDateRange = (logRecord -> {
@@ -37,7 +36,7 @@ public class StatisticsCollector {
             resourceFrequency.merge(log.requestedResource(), 1L, Long::sum);
             codeAnswerFrequency.merge(log.status(), 1L, Long::sum);
             totalBytesSent.addAndGet(log.bytesSent());
-             sketch.accept(log.bytesSent());
+            sketch.accept(log.bytesSent());
         });
 
 

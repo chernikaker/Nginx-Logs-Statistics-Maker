@@ -24,7 +24,7 @@ public abstract class StatisticsFileWriter {
     public void writeResultsToFile(Path directoryPath, LogInfoReport report, CommandLineArgs args, List<String> resources) {
         String reportText = makeReportText(report, args, resources);
         if (Files.isRegularFile(directoryPath)) {
-            throw new RuntimeException("Path is a regular file, not directory: "+directoryPath);
+            throw new RuntimeException("Path is a regular file, not directory: " + directoryPath);
         }
         Path filePath = directoryPath.resolve(filename);
         if (Files.exists(filePath)) {
