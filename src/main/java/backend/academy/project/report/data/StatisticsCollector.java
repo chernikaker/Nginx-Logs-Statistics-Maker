@@ -5,7 +5,9 @@ import backend.academy.project.logs.LogRecord;
 import com.datadoghq.sketch.ddsketch.DDSketch;
 import com.datadoghq.sketch.ddsketch.DDSketches;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -25,6 +27,7 @@ public class StatisticsCollector {
         Map<String, Long> resourceFrequency = new HashMap<>();
         Map<Integer, Long> codeAnswerFrequency = new HashMap<>();
         AtomicLong totalBytesSent = new AtomicLong();
+        Set<String> uniqueIP = new HashSet<>();
 
 
         double relativeAccuracy = 0.01;
@@ -37,6 +40,7 @@ public class StatisticsCollector {
             codeAnswerFrequency.merge(log.status(), 1L, Long::sum);
             totalBytesSent.addAndGet(log.bytesSent());
             sketch.accept(log.bytesSent());
+            uniqueIP.add(log.remoteAddress());
         });
 
 
@@ -46,7 +50,7 @@ public class StatisticsCollector {
         report.codeAnswerFrequency(codeAnswerFrequency);
         report.avgAnswerSize(logsCount.get() > 0 ?  (double) totalBytesSent.get() / logsCount.get() : 0.0);
         report.percentile95AnswerSize(sketch.getValueAtQuantile(quantile));
-
+        report.uniqueIPCount(uniqueIP.size());
         return report;
     }
 }

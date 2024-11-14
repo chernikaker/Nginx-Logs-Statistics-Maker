@@ -12,4 +12,5 @@ public class LogInfoReport {
     private Map<Integer, Long> codeAnswerFrequency;
     private double avgAnswerSize;
     private double percentile95AnswerSize;
+    private long uniqueIPCount;
 }

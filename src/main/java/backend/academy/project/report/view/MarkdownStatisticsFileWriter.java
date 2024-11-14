@@ -39,7 +39,8 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
         sb.append(VERT_DELIM).append("Start date").append(VERT_DELIM).append(args.from().isPresent() ? args.from().get():"-").append(VERT_DELIM).append('\n');
         sb.append(VERT_DELIM).append("End date").append(VERT_DELIM).append(args.to().isPresent() ? args.to().get():"-").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append("Request number").append(VERT_DELIM).append(report.logsCount()).append(VERT_DELIM).append('\n');
+        sb.append(VERT_DELIM).append("Logs amount").append(VERT_DELIM).append(report.logsCount()).append(VERT_DELIM).append('\n');
+        sb.append(VERT_DELIM).append("Unique IP amount").append(VERT_DELIM).append(report.uniqueIPCount()).append(VERT_DELIM).append('\n');
         sb.append(VERT_DELIM).append("Average answer size").append(VERT_DELIM).append(report.avgAnswerSize()).append(VERT_DELIM).append('\n');
         sb.append(VERT_DELIM).append("95p of answer size").append(VERT_DELIM).append(report.percentile95AnswerSize()).append(VERT_DELIM).append('\n');
         return sb.toString();

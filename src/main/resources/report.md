@@ -8,7 +8,8 @@
 |:---------:|:---------:|
 |Start date|-|
 |End date|-|
-|Request number|51462|
+|Log number|51462|
+|Unique IP number|2660|
 |Average answer size|659509.514398974|
 |95p of answer size|1766.825981976929|
 ## Most frequently used resources (top 5)
