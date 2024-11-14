@@ -12,8 +12,8 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
     private static final String TABLE_BORDER = "|====";
     private static final String TABLE_CELL = "|";
 
-    protected AdocStatisticsFileWriter() {
-        super("statistics_report.adoc");
+    protected AdocStatisticsFileWriter(String filename) {
+        super(filename+".adoc");
     }
 
     @Override

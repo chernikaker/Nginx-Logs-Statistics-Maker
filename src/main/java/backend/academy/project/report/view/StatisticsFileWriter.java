@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public abstract class StatisticsFileWriter {
 
-    protected final int TOP_RESULTS = 5;
+    protected static final int TOP_RESULTS = 5;
     protected final String filename;
 
     protected StatisticsFileWriter(String filename) {
@@ -27,6 +27,9 @@ public abstract class StatisticsFileWriter {
             throw new RuntimeException("Path is a regular file, not directory: "+directoryPath);
         }
         Path filePath = directoryPath.resolve(filename);
+        if (Files.exists(filePath)) {
+            throw new RuntimeException("File already exists: " + filePath);
+        }
         try {
             Files.writeString(filePath, reportText, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {

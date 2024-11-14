@@ -17,8 +17,8 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
     private static final String HORIZ_DELIM = ":---------:";
     private static final String VERT_DELIM = "|";
 
-    protected MarkdownStatisticsFileWriter() {
-        super("statistics_report.md");
+    protected MarkdownStatisticsFileWriter(String filename) {
+        super(filename+".md");
     }
 
     @Override
