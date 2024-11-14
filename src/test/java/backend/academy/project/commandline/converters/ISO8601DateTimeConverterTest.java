@@ -4,9 +4,11 @@ import com.beust.jcommander.ParameterException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ISO8601DateTimeConverterTest {
 
@@ -15,14 +17,18 @@ public class ISO8601DateTimeConverterTest {
     @ParameterizedTest
     @CsvSource({"2005-08-09T18:31:42"})
     public void convertLocalDateTime(String sampleDateTime) {
-        LocalDateTime dateTime = assertDoesNotThrow(() -> converter.convert(sampleDateTime));
+        Optional<LocalDateTime> dt = assertDoesNotThrow(() -> converter.convert(sampleDateTime));
+        assertTrue(dt.isPresent());
+        LocalDateTime dateTime = dt.get();
         assertEquals(LocalDateTime.of(2005, 8, 9, 18, 31, 42), dateTime);
     }
 
     @ParameterizedTest
     @CsvSource({"2005-08-09"})
     public void convertLocalDateOnly(String sampleDateTime) {
-        LocalDateTime dateTime = assertDoesNotThrow(() -> converter.convert(sampleDateTime));
+        Optional<LocalDateTime> dt = assertDoesNotThrow(() -> converter.convert(sampleDateTime));
+        assertTrue(dt.isPresent());
+        LocalDateTime dateTime = dt.get();
         assertEquals(LocalDateTime.of(2005, 8, 9, 0, 0, 0), dateTime);
     }
 

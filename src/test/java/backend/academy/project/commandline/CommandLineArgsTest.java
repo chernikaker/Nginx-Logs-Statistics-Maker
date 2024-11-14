@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommandLineArgsTest {
 
@@ -23,8 +25,10 @@ public class CommandLineArgsTest {
             .build();
         helloCmd.parse(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
-        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from());
-        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to());
+        assertTrue(jArgs.from().isPresent());
+        assertTrue(jArgs.to().isPresent());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().get());
+        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().get());
         assertEquals(OuputFileType.ADOC, jArgs.type());
     }
 
@@ -41,8 +45,10 @@ public class CommandLineArgsTest {
             .build();
         helloCmd.parse(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
-        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from());
-        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to());
+        assertTrue(jArgs.from().isPresent());
+        assertTrue(jArgs.to().isPresent());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().get());
+        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().get());
         assertEquals(OuputFileType.MARKDOWN, jArgs.type());
     }
 
@@ -59,8 +65,9 @@ public class CommandLineArgsTest {
             .build();
         helloCmd.parse(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
-        assertEquals(LocalDateTime.MIN, jArgs.from());
-        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to());
+        assertFalse(jArgs.from().isPresent());
+        assertTrue(jArgs.to().isPresent());
+        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().get());
         assertEquals(OuputFileType.ADOC, jArgs.type());
     }
 
@@ -77,8 +84,9 @@ public class CommandLineArgsTest {
             .build();
         helloCmd.parse(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
-        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from());
-        assertEquals(LocalDateTime.MAX, jArgs.to());
+        assertFalse(jArgs.to().isPresent());
+        assertTrue(jArgs.from().isPresent());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().get());
         assertEquals(OuputFileType.ADOC, jArgs.type());
     }
 
