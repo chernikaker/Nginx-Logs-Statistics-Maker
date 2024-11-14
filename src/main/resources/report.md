@@ -2,27 +2,39 @@
 ## Processed source files or URL
 |Source|
 |:---------:|
-|https://raw.githubusercontent.com/elastic/examples/master/Common%20Data%20Formats/nginx_logs/nginx_logs|
+|logFile1.txt|
+|logFile2.txt|
+|logs.txt|
 ## Common info
 |Metric|Value|
 |:---------:|:---------:|
-|Start date|-|
-|End date|-|
-|Log number|51462|
-|Unique IP number|2660|
-|Average answer size|659509.514398974|
-|95p of answer size|1766.825981976929|
+|Date from|-|
+|Date to|-|
+|Logs amount|106|
+|Unique IP amount|54|
+|Average bytes sent|855.3867924528302|
+|95p bytes sent|2953.1969536666325|
 ## Most frequently used resources (top 5)
 |Resource|Usages|
 |:---------:|:---------:|
-|/downloads/product_1|30285
-|/downloads/product_2|21104
-|/downloads/product_3|73
+|/downloads/product_1|48|
+|/downloads/product_2|18|
+|/multi-state%20infrastructure.gif|1|
+|/Robust%20tangible%20system-worthy/secured%20line.jpg|1|
+|/task-force-human-resource-motivating/Balanced.js|1|
 ## Most frequently appeared answer codes (top 5)
 |Code|Description|Amount|
 |:---------:|:---------:|:---------:|
-|404|Not Found|33876
-|304|Not Modified|13330
-|200|OK|4028
-|206|Partial Content|186
-|403|Forbidden|38
+|200|OK|40|
+|404|Not Found|35|
+|304|Not Modified|26|
+|301|Moved Permanently|4|
+|400|Bad Request|1|
+## HTTP request types frequency
+|Type|Amount|
+|:---------:|:---------:|
+|GET|96|
+|HEAD|4|
+|POST|3|
+|PUT|2|
+|DELETE|1|

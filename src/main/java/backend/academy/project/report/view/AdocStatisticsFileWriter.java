@@ -34,19 +34,19 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== Common info\n");
         sb.append("[cols=2]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(addTableHeader(List.of("Metric", "Value")));
-        sb.append(addCell("Date from"));
-        sb.append(addCell(args.from().isPresent() ? args.from().get().toString() : "-"));
-        sb.append(addCell("Date to"));
-        sb.append(addCell(args.to().isPresent() ? args.to().get().toString() : "-"));
-        sb.append(addCell("Logs amount"));
-        sb.append(addCell(String.valueOf(report.logsCount())));
-        sb.append(addCell("Unique IP amount"));
-        sb.append(addCell(String.valueOf(report.uniqueIPCount())));
-        sb.append(addCell("Average bytes sent"));
-        sb.append(addCell(String.valueOf(report.avgAnswerSize())));
-        sb.append(addCell("95p bytes sent"));
-        sb.append(addCell(String.valueOf(report.percentile95AnswerSize())));
+        sb.append(buildTableHeader(List.of("Metric", "Value")));
+        sb.append(buildCell("Date from"));
+        sb.append(buildCell(args.from().isPresent() ? args.from().get().toString() : "-"));
+        sb.append(buildCell("Date to"));
+        sb.append(buildCell(args.to().isPresent() ? args.to().get().toString() : "-"));
+        sb.append(buildCell("Logs amount"));
+        sb.append(buildCell(String.valueOf(report.logsCount())));
+        sb.append(buildCell("Unique IP amount"));
+        sb.append(buildCell(String.valueOf(report.uniqueIPCount())));
+        sb.append(buildCell("Average bytes sent"));
+        sb.append(buildCell(String.valueOf(report.avgAnswerSize())));
+        sb.append(buildCell("95p bytes sent"));
+        sb.append(buildCell(String.valueOf(report.percentile95AnswerSize())));
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
     }
@@ -56,11 +56,11 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== Most frequently used resources (top " + TOP_RESULTS + ")\n");
         sb.append("[cols=2]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(addTableHeader(List.of("Resource", "Usages")));
+        sb.append(buildTableHeader(List.of("Resource", "Usages")));
         List<Map.Entry<String, Long>> topResources = getTopByFrequency(report.resourceFrequency());
         for (Map.Entry<String, Long> entry : topResources) {
-            sb.append(addCell(entry.getKey()));
-            sb.append(addCell(entry.getValue().toString()));
+            sb.append(buildCell(entry.getKey()));
+            sb.append(buildCell(entry.getValue().toString()));
         }
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
@@ -71,12 +71,12 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== Most frequently appeared answer codes (top " + TOP_RESULTS + ")\n");
         sb.append("[cols=3]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(addTableHeader(List.of("Code", "Description", "Amount")));
+        sb.append(buildTableHeader(List.of("Code", "Description", "Amount")));
         List<Map.Entry<Integer, Long>> topAnswers = getTopByFrequency(report.codeAnswerFrequency());
         for (Map.Entry<Integer, Long> entry : topAnswers) {
-            sb.append(addCell(entry.getKey().toString()));
-            sb.append(addCell(getAnswerInfoByCode(entry.getKey())));
-            sb.append(addCell(entry.getValue().toString()));
+            sb.append(buildCell(entry.getKey().toString()));
+            sb.append(buildCell(getAnswerInfoByCode(entry.getKey())));
+            sb.append(buildCell(entry.getValue().toString()));
         }
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
@@ -87,11 +87,11 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== HTTP request types frequency");
         sb.append("[cols=2]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(addTableHeader(List.of("Type", "Amount")));
+        sb.append(buildTableHeader(List.of("Type", "Amount")));
         Map<RequestType, Long> requestTypes = report.requestTypeFrequency();
         for (Map.Entry<RequestType, Long> entry : getTopByFrequency(requestTypes, requestTypes.size())) {
-            sb.append(addCell(entry.getKey().toString()));
-            sb.append(addCell(entry.getValue().toString()));
+            sb.append(buildCell(entry.getKey().toString()));
+            sb.append(buildCell(entry.getValue().toString()));
         }
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
@@ -102,19 +102,19 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append("== Processed source files or URL\n");
         sb.append("[cols=1]").append('\n');
         sb.append(TABLE_BORDER).append('\n');
-        sb.append(addTableHeader(List.of("Source")));
+        sb.append(buildTableHeader(List.of("Source")));
         for (String source : sources) {
-            sb.append(addCell(source));
+            sb.append(buildCell(source));
         }
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
     }
 
-    private String addCell(String data){
+    private String buildCell(String data){
         return TABLE_CELL + data + '\n';
     }
 
-    private String addTableHeader(List<String> names) {
+    private String buildTableHeader(List<String> names) {
         StringBuilder sb = new StringBuilder();
         for (String name : names) {
             sb.append(TABLE_CELL).append(name).append(' ');

@@ -6,6 +6,7 @@ import backend.academy.project.report.data.AnswerCodeContainer;
 import backend.academy.project.report.data.LogInfoReport;
 import java.util.List;
 import java.util.Map;
+import static backend.academy.project.report.data.AnswerCodeContainer.getAnswerInfoByCode;
 
 public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
 
@@ -31,25 +32,37 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
     private String makeCommonInfoTable(LogInfoReport report, CommandLineArgs args) {
         StringBuilder sb = new StringBuilder();
         sb.append("## Common info").append('\n');
-        sb.append(VERT_DELIM).append("Metric").append(VERT_DELIM).append("Value").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append("Start date").append(VERT_DELIM).append(args.from().isPresent() ? args.from().get():"-").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append("End date").append(VERT_DELIM).append(args.to().isPresent() ? args.to().get():"-").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append("Logs amount").append(VERT_DELIM).append(report.logsCount()).append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append("Unique IP amount").append(VERT_DELIM).append(report.uniqueIPCount()).append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append("Average answer size").append(VERT_DELIM).append(report.avgAnswerSize()).append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append("95p of answer size").append(VERT_DELIM).append(report.percentile95AnswerSize()).append(VERT_DELIM).append('\n');
+        sb.append(buildTableHeader(List.of("Metric", "Value")));
+        sb.append(buildCell("Date from"));
+        sb.append(buildCell(args.from().isPresent() ? args.from().get().toString() : "-"));
+        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildCell("Date to"));
+        sb.append(buildCell(args.to().isPresent() ? args.to().get().toString() : "-"));
+        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildCell("Logs amount"));
+        sb.append(buildCell(String.valueOf(report.logsCount())));
+        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildCell("Unique IP amount"));
+        sb.append(buildCell(String.valueOf(report.uniqueIPCount())));
+        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildCell("Average bytes sent"));
+        sb.append(buildCell(String.valueOf(report.avgAnswerSize())));
+        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildCell("95p bytes sent"));
+        sb.append(buildCell(String.valueOf(report.percentile95AnswerSize())));
+        sb.append(VERT_DELIM).append('\n');
         return sb.toString();
     }
 
     private String makeResourcesTable(LogInfoReport report) {
         StringBuilder sb = new StringBuilder();
         sb.append("## Most frequently used resources (top "+TOP_RESULTS+")").append('\n');
-        sb.append(VERT_DELIM).append("Resource").append(VERT_DELIM).append("Usages").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
+        sb.append(buildTableHeader(List.of("Resource", "Usages")));
         List<Map.Entry<String, Long>> topResources = getTopByFrequency(report.resourceFrequency());
         for (Map.Entry<String, Long> entry : topResources) {
-            sb.append(VERT_DELIM).append(entry.getKey()).append(VERT_DELIM).append(entry.getValue()).append('\n');
+            sb.append(buildCell(entry.getKey()));
+            sb.append(buildCell(entry.getValue().toString()));
+            sb.append(VERT_DELIM).append('\n');
         }
         return sb.toString();
     }
@@ -57,11 +70,12 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
     private String makeRequestTypeFrequencyTable(LogInfoReport report) {
         StringBuilder sb = new StringBuilder();
         sb.append("## HTTP request types frequency").append('\n');
-        sb.append(VERT_DELIM).append("Type").append(VERT_DELIM).append("Amount").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
+        sb.append(buildTableHeader(List.of("Type", "Amount")));
         Map<RequestType, Long> requestTypes = report.requestTypeFrequency();
         for (Map.Entry<RequestType, Long> entry : getTopByFrequency(requestTypes, requestTypes.size())) {
-            sb.append(VERT_DELIM).append(entry.getKey()).append(VERT_DELIM).append(entry.getValue()).append('\n');
+            sb.append(buildCell(entry.getKey().toString()));
+            sb.append(buildCell(entry.getValue().toString()));
+            sb.append(VERT_DELIM).append('\n');
         }
         return sb.toString();
     }
@@ -69,12 +83,13 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
     private String makeAnswerCodeTable(LogInfoReport report) {
         StringBuilder sb = new StringBuilder();
         sb.append("## Most frequently appeared answer codes (top "+TOP_RESULTS+")").append('\n');
-        sb.append(VERT_DELIM).append("Code").append(VERT_DELIM).append("Description").append(VERT_DELIM).append("Amount").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
+        sb.append(buildTableHeader(List.of("Code", "Description", "Amount")));
         List<Map.Entry<Integer, Long>> topAnswers = getTopByFrequency(report.codeAnswerFrequency());
         for (Map.Entry<Integer, Long> entry : topAnswers) {
-            sb.append(VERT_DELIM).append(entry.getKey()).append(VERT_DELIM).append(AnswerCodeContainer.getAnswerInfoByCode(
-                entry.getKey())).append(VERT_DELIM).append(entry.getValue()).append('\n');
+            sb.append(buildCell(entry.getKey().toString()));
+            sb.append(buildCell(getAnswerInfoByCode(entry.getKey())));
+            sb.append(buildCell(entry.getValue().toString()));
+            sb.append(VERT_DELIM).append('\n');
         }
         return sb.toString();
     }
@@ -82,11 +97,28 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
     private String makeSourceTable(List<String> sources) {
         StringBuilder sb = new StringBuilder();
         sb.append("## Processed source files or URL").append('\n');
-        sb.append(VERT_DELIM).append("Source").append(VERT_DELIM).append('\n');
-        sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
+        sb.append(buildTableHeader(List.of("Source")));
         for (String source : sources) {
-            sb.append(VERT_DELIM).append(source).append(VERT_DELIM).append('\n');
+            sb.append(buildCell(source));
+            sb.append(VERT_DELIM).append('\n');
         }
+        return sb.toString();
+    }
+
+    private String buildCell(String data){
+        return VERT_DELIM+data;
+    }
+
+    private String buildTableHeader(List<String> names) {
+        StringBuilder sb = new StringBuilder(VERT_DELIM);
+        for (String name : names) {
+            sb.append(name).append(VERT_DELIM);
+        }
+        sb.append('\n').append(VERT_DELIM);
+        for (int i = 0; i < names.size(); i++) {
+            sb.append(HORIZ_DELIM).append(VERT_DELIM);
+        }
+        sb.append('\n');
         return sb.toString();
     }
 
