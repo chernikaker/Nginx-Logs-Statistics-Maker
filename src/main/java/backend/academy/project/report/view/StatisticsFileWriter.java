@@ -38,10 +38,14 @@ public abstract class StatisticsFileWriter {
     }
 
     protected <K> List<Map.Entry<K, Long>> getTopByFrequency(Map<K, Long> data) {
+        return getTopByFrequency(data, TOP_RESULTS);
+    }
+
+    protected <K> List<Map.Entry<K, Long>> getTopByFrequency(Map<K, Long> data, int limit) {
         return data.entrySet()
             .stream()
             .sorted(Map.Entry.<K, Long>comparingByValue().reversed())
-            .limit(TOP_RESULTS)
+            .limit(limit)
             .collect(Collectors.toList());
     }
 }

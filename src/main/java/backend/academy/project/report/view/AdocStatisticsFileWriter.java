@@ -1,6 +1,7 @@
 package backend.academy.project.report.view;
 
 import backend.academy.project.commandline.CommandLineArgs;
+import backend.academy.project.logs.RequestType;
 import backend.academy.project.report.data.LogInfoReport;
 import static  backend.academy.project.report.data.AnswerCodeContainer.getAnswerInfoByCode;
 import java.util.List;
@@ -24,6 +25,7 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(makeCommonInfoTable(report, args));
         sb.append(makeResourcesTable(report));
         sb.append(makeAnswerCodeTable(report));
+        sb.append(makeRequestFrequencyTable(report));
         return sb.toString();
     }
 
@@ -74,6 +76,21 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         for (Map.Entry<Integer, Long> entry : topAnswers) {
             sb.append(addCell(entry.getKey().toString()));
             sb.append(addCell(getAnswerInfoByCode(entry.getKey())));
+            sb.append(addCell(entry.getValue().toString()));
+        }
+        sb.append(TABLE_BORDER).append('\n');
+        return sb.toString();
+    }
+
+    private String makeRequestFrequencyTable(LogInfoReport report) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("== HTTP request types frequency");
+        sb.append("[cols=2]").append('\n');
+        sb.append(TABLE_BORDER).append('\n');
+        sb.append(addTableHeader(List.of("Type", "Amount")));
+        Map<RequestType, Long> requestTypes = report.requestTypeFrequency();
+        for (Map.Entry<RequestType, Long> entry : getTopByFrequency(requestTypes, requestTypes.size())) {
+            sb.append(addCell(entry.getKey().toString()));
             sb.append(addCell(entry.getValue().toString()));
         }
         sb.append(TABLE_BORDER).append('\n');

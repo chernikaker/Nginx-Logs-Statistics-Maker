@@ -1,16 +1,11 @@
 package backend.academy.project.report.view;
 
-import backend.academy.Main;
 import backend.academy.project.commandline.CommandLineArgs;
+import backend.academy.project.logs.RequestType;
 import backend.academy.project.report.data.AnswerCodeContainer;
 import backend.academy.project.report.data.LogInfoReport;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
 
@@ -29,6 +24,7 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(makeCommonInfoTable(report, args));
         sb.append(makeResourcesTable(report));
         sb.append(makeAnswerCodeTable(report));
+        sb.append(makeRequestTypeFrequencyTable(report));
         return sb.toString();
     }
 
@@ -53,6 +49,18 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
         List<Map.Entry<String, Long>> topResources = getTopByFrequency(report.resourceFrequency());
         for (Map.Entry<String, Long> entry : topResources) {
+            sb.append(VERT_DELIM).append(entry.getKey()).append(VERT_DELIM).append(entry.getValue()).append('\n');
+        }
+        return sb.toString();
+    }
+
+    private String makeRequestTypeFrequencyTable(LogInfoReport report) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("## HTTP request types frequency").append('\n');
+        sb.append(VERT_DELIM).append("Type").append(VERT_DELIM).append("Amount").append(VERT_DELIM).append('\n');
+        sb.append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append(HORIZ_DELIM).append(VERT_DELIM).append('\n');
+        Map<RequestType, Long> requestTypes = report.requestTypeFrequency();
+        for (Map.Entry<RequestType, Long> entry : getTopByFrequency(requestTypes, requestTypes.size())) {
             sb.append(VERT_DELIM).append(entry.getKey()).append(VERT_DELIM).append(entry.getValue()).append('\n');
         }
         return sb.toString();

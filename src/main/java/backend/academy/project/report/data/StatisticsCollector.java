@@ -2,6 +2,7 @@ package backend.academy.project.report.data;
 
 import backend.academy.project.commandline.CommandLineArgs;
 import backend.academy.project.logs.LogRecord;
+import backend.academy.project.logs.RequestType;
 import com.datadoghq.sketch.ddsketch.DDSketch;
 import com.datadoghq.sketch.ddsketch.DDSketches;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class StatisticsCollector {
         AtomicLong logsCount = new AtomicLong();
         Map<String, Long> resourceFrequency = new HashMap<>();
         Map<Integer, Long> codeAnswerFrequency = new HashMap<>();
+        Map<RequestType, Long> requestTypeFrequency = new HashMap<>();
         AtomicLong totalBytesSent = new AtomicLong();
         Set<String> uniqueIP = new HashSet<>();
 
@@ -38,6 +40,7 @@ public class StatisticsCollector {
             logsCount.getAndIncrement();
             resourceFrequency.merge(log.requestedResource(), 1L, Long::sum);
             codeAnswerFrequency.merge(log.status(), 1L, Long::sum);
+            requestTypeFrequency.merge(log.requestType(), 1L, Long::sum);
             totalBytesSent.addAndGet(log.bytesSent());
             sketch.accept(log.bytesSent());
             uniqueIP.add(log.remoteAddress());
@@ -48,6 +51,7 @@ public class StatisticsCollector {
         report.logsCount(logsCount.get());
         report.resourceFrequency(resourceFrequency);
         report.codeAnswerFrequency(codeAnswerFrequency);
+        report.requestTypeFrequency(requestTypeFrequency);
         report.avgAnswerSize(logsCount.get() > 0 ?  (double) totalBytesSent.get() / logsCount.get() : 0.0);
         report.percentile95AnswerSize(sketch.getValueAtQuantile(quantile));
         report.uniqueIPCount(uniqueIP.size());
