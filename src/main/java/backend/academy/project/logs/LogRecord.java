@@ -11,7 +11,7 @@ public record LogRecord(
      String requestedResource,
      String httpVersion,
      int status,
-     int bytesSent,
+     long bytesSent,
      String httpReferer,
      String httpUserAgent
     )
