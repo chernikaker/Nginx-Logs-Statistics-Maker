@@ -1,6 +1,6 @@
 package backend.academy.project.readers;
 
-import backend.academy.project.readers.exception.LogFilesNotFound;
+import backend.academy.project.readers.exception.FindingFilesException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -79,7 +79,7 @@ public class FileSearcherTest {
         Path invalidRoot = rootDir.resolve("invalidRoot");
         String glob = "log*";
         assertThatThrownBy(() -> fileSearcher.getLogFiles(glob, invalidRoot))
-            .isInstanceOf(LogFilesNotFound.class)
+            .isInstanceOf(FindingFilesException.class)
             .hasMessage("Error finding logs from root "+invalidRoot+" with glob " + glob);
     }
 
