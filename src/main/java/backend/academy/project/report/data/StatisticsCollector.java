@@ -7,6 +7,9 @@ import backend.academy.project.logs.RequestType;
 import backend.academy.project.report.data.exception.LogsNotFoundException;
 import com.datadoghq.sketch.ddsketch.DDSketch;
 import com.datadoghq.sketch.ddsketch.DDSketches;
+import com.google.common.hash.Hasher;
+import net.agkn.hll.HLL;
+import org.apache.commons.codec.digest.MurmurHash3;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,8 +36,7 @@ public class StatisticsCollector {
         Map<Integer, Long> codeAnswerFrequency = new HashMap<>();
         Map<RequestType, Long> requestTypeFrequency = new HashMap<>();
         AtomicLong totalBytesSent = new AtomicLong();
-        Set<String> uniqueIP = new HashSet<>();
-
+        HLL hll = new HLL(14, 5);
 
         double relativeAccuracy = 0.01;
         double quantile = 0.95;
@@ -51,7 +53,7 @@ public class StatisticsCollector {
             requestTypeFrequency.merge(log.requestType(), 1L, Long::sum);
             totalBytesSent.addAndGet(log.bytesSent());
             sketch.accept(log.bytesSent());
-            uniqueIP.add(log.remoteAddress());
+            hll.addRaw(log.remoteAddress().hashCode());
         });
 
         if (logsCount.get() == 0) {
@@ -64,7 +66,7 @@ public class StatisticsCollector {
         report.requestTypeFrequency(requestTypeFrequency);
         report.avgAnswerSize(logsCount.get() > 0 ?  (double) totalBytesSent.get() / logsCount.get() : 0.0);
         report.percentile95AnswerSize(sketch.getValueAtQuantile(quantile));
-        report.uniqueIPCount(uniqueIP.size());
+        report.uniqueIPCount(hll.cardinality());
         return report;
     }
 }
