@@ -2,7 +2,10 @@ package backend.academy.project.report.view;
 
 import backend.academy.project.commandline.CommandLineArgs;
 import backend.academy.project.report.data.LogInfoReport;
+import backend.academy.project.report.view.exception.PathIsNotDirectoryException;
+import backend.academy.project.report.view.exception.WritingToFileException;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -21,24 +24,21 @@ public abstract class StatisticsFileWriter {
 
     protected abstract String makeReportText(LogInfoReport report, CommandLineArgs args,  List<String> resources);
 
-    public void writeResultsToFile(Path directoryPath, LogInfoReport report, CommandLineArgs args, List<String> resources) {
+    public void writeResultsToFile(Path directoryPath, LogInfoReport report, CommandLineArgs args, List<String> resources)
+        throws FileAlreadyExistsException {
         String reportText = makeReportText(report, args, resources);
         if (Files.isRegularFile(directoryPath)) {
-            throw new RuntimeException("Path is a regular file, not directory: " + directoryPath);
+            throw new PathIsNotDirectoryException("Path is a regular file, not directory: " + directoryPath);
         }
         Path filePath = directoryPath.resolve(filename);
         if (Files.exists(filePath)) {
-            throw new RuntimeException("File already exists: " + filePath);
+            throw new FileAlreadyExistsException("File already exists: " + filePath);
         }
         try {
             Files.writeString(filePath, reportText, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write statistics to file " + filePath);
+            throw new WritingToFileException("Can't write statistics to file " + filePath);
         }
-    }
-
-    protected <K> List<Map.Entry<K, Long>> getTopByFrequency(Map<K, Long> data) {
-        return getTopByFrequency(data, TOP_RESULTS);
     }
 
     protected <K> List<Map.Entry<K, Long>> getTopByFrequency(Map<K, Long> data, int limit) {

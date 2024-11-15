@@ -58,7 +58,7 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         StringBuilder sb = new StringBuilder();
         sb.append("## Most frequently used resources (top "+TOP_RESULTS+")").append('\n');
         sb.append(buildTableHeader(List.of("Resource", "Usages")));
-        List<Map.Entry<String, Long>> topResources = getTopByFrequency(report.resourceFrequency());
+        List<Map.Entry<String, Long>> topResources = getTopByFrequency(report.resourceFrequency(), TOP_RESULTS);
         for (Map.Entry<String, Long> entry : topResources) {
             sb.append(buildCell(entry.getKey()));
             sb.append(buildCell(entry.getValue().toString()));
@@ -84,7 +84,7 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         StringBuilder sb = new StringBuilder();
         sb.append("## Most frequently appeared answer codes (top "+TOP_RESULTS+")").append('\n');
         sb.append(buildTableHeader(List.of("Code", "Description", "Amount")));
-        List<Map.Entry<Integer, Long>> topAnswers = getTopByFrequency(report.codeAnswerFrequency());
+        List<Map.Entry<Integer, Long>> topAnswers = getTopByFrequency(report.codeAnswerFrequency(), TOP_RESULTS);
         for (Map.Entry<Integer, Long> entry : topAnswers) {
             sb.append(buildCell(entry.getKey().toString()));
             sb.append(buildCell(getAnswerInfoByCode(entry.getKey())));
