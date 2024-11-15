@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class AnswerCodeContainer {
+public class AnswerCodeCollection {
 
     private static final Map<Integer, String> codeNames;
 
@@ -77,9 +77,8 @@ public class AnswerCodeContainer {
     public static String getAnswerInfoByCode(int code) {
         String answer = codeNames.get(code);
         if (answer == null) {
-            throw new NoSuchElementException("Code not found: " + code);
+            throw new NoSuchElementException("Code is not found: " + code);
         }
         return answer;
     }
-
 }

@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class StatisticsCollector {
 
-    public LogInfoReport calculateLogStatistics(Stream<LogRecord> logRecords, CommandLineArgs args) {
+    public static LogInfoReport calculateLogStatistics(Stream<LogRecord> logRecords, CommandLineArgs args) {
 
         Predicate<LogRecord> checkDateRange = (logRecord -> {
             if(args.from().isPresent() && logRecord.timeLocal().isBefore(args.from().get())) {

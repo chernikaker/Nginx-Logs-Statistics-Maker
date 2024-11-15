@@ -3,7 +3,7 @@ package backend.academy.project.report.view;
 import backend.academy.project.commandline.CommandLineArgs;
 import backend.academy.project.logs.RequestType;
 import backend.academy.project.report.data.LogInfoReport;
-import static  backend.academy.project.report.data.AnswerCodeContainer.getAnswerInfoByCode;
+import static  backend.academy.project.report.data.AnswerCodeCollection.getAnswerInfoByCode;
 import java.util.List;
 import java.util.Map;
 
