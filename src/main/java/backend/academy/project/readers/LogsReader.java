@@ -5,6 +5,9 @@ import backend.academy.project.logs.LogRecordParser;
 import backend.academy.project.logs.exception.LogParsingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,5 +33,16 @@ public abstract class LogsReader {
 
     public List<String> getLogSourceNames() {
         return Collections.unmodifiableList(logSourceNames);
+    }
+
+    public static LogsReader getReaderByPath(String path) {
+        try {
+            new URI(path).toURL();
+            return new UrlLogsReader(path);
+        } catch (MalformedURLException e) {
+            return new LocalFileLogsReader(path);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
