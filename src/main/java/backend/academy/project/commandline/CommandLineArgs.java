@@ -25,6 +25,14 @@ public class CommandLineArgs {
         converter = ISO8601DateTimeConverter.class)
     private Optional<LocalDateTime> to = Optional.empty();
 
+    @Parameter(names = {"--filter-field"},
+        description = "Field of the log to filter by")
+    private FilterFieldType filterField = FilterFieldType.NONE;
+
+    @Parameter(names = {"--filter-value"},
+        description = "Regex value of log field to filter by")
+    private String filterValue = "";
+
     @Parameter(names = {"--filename"},
     description = "Name of the report file")
     private String filename = "statistics_report";
