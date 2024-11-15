@@ -1,6 +1,7 @@
 package backend.academy.project.report.view;
 
 import backend.academy.project.commandline.CommandLineArgs;
+import backend.academy.project.commandline.FilterFieldType;
 import backend.academy.project.logs.RequestType;
 import backend.academy.project.report.data.LogInfoReport;
 import java.util.List;
@@ -37,6 +38,9 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(buildRowEnd());
         sb.append(buildCell("Date to"));
         sb.append(buildCell(args.to().isPresent() ? args.to().get().toString() : "-"));
+        sb.append(buildRowEnd());
+        sb.append(buildCell("Filter "));
+        sb.append(buildCell(args.filterField() == FilterFieldType.NONE ? "-" : args.filterField()+" = "+args.filterValue()));
         sb.append(buildRowEnd());
         sb.append(buildCell("Logs amount"));
         sb.append(buildCell(String.valueOf(report.logsCount())));

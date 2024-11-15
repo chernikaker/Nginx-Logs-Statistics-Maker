@@ -1,6 +1,7 @@
 package backend.academy.project.report.view;
 
 import backend.academy.project.commandline.CommandLineArgs;
+import backend.academy.project.commandline.FilterFieldType;
 import backend.academy.project.logs.RequestType;
 import backend.academy.project.report.data.LogInfoReport;
 import static  backend.academy.project.report.data.AnswerCodeCollection.getAnswerInfoByCode;
@@ -39,6 +40,8 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(buildCell(args.from().isPresent() ? args.from().get().toString() : "-"));
         sb.append(buildCell("Date to"));
         sb.append(buildCell(args.to().isPresent() ? args.to().get().toString() : "-"));
+        sb.append(buildCell("Filter "));
+        sb.append(buildCell(args.filterField() == FilterFieldType.NONE ? "-" : args.filterField()+" = "+args.filterValue()));
         sb.append(buildCell("Logs amount"));
         sb.append(buildCell(String.valueOf(report.logsCount())));
         sb.append(buildCell("Unique IP amount"));

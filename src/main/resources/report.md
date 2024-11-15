@@ -2,32 +2,30 @@
 ## Processed source files or URL
 |Source|
 |:---------:|
-|https://raw.githubusercontent.com/elastic/examples/master/Common%20Data%20Formats/nginx_logs/nginx_logs|
+|logFile1.txt|
+|logFile2.txt|
+|logs.txt|
 ## Common info
 |Metric|Value|
 |:---------:|:---------:|
 |Date from|-|
 |Date to|-|
-|Logs amount|51462|
-|Unique IP amount|2660|
-|Average bytes sent|659509.514398974|
-|95p bytes sent|1766.825981976929|
+|Filter |STATUS = 404|
+|Logs amount|35|
+|Unique IP amount|10|
+|Average bytes sent|327,514286|
+|95p bytes sent|347,852327|
 ## Most frequently used resources (top 5)
 |Resource|Usages|
 |:---------:|:---------:|
-|/downloads/product_1|30285|
-|/downloads/product_2|21104|
-|/downloads/product_3|73|
+|/downloads/product_1|28|
+|/downloads/product_2|6|
+|/Phased-even-keeled-disintermediate/4th%20generation.htm|1|
 ## Most frequently appeared answer codes (top 5)
 |Code|Description|Amount|
 |:---------:|:---------:|:---------:|
-|404|Not Found|33876|
-|304|Not Modified|13330|
-|200|OK|4028|
-|206|Partial Content|186|
-|403|Forbidden|38|
+|404|Not Found|35|
 ## HTTP request types frequency
 |Type|Amount|
 |:---------:|:---------:|
-|GET|51379|
-|HEAD|83|
+|GET|35|
