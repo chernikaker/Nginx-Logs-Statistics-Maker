@@ -4,11 +4,13 @@ import backend.academy.project.commandline.CommandLineArgs;
 import backend.academy.project.commandline.FilterFieldType;
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.logs.RequestType;
+import backend.academy.project.report.data.exception.LogsNotFoundException;
 import com.datadoghq.sketch.ddsketch.DDSketch;
 import com.datadoghq.sketch.ddsketch.DDSketches;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
@@ -18,8 +20,9 @@ public class StatisticsCollector {
 
     public static LogInfoReport calculateLogStatistics(Stream<LogRecord> logRecords, CommandLineArgs args) {
 
+
         Predicate<LogRecord> checkDateRange = (logRecord -> {
-            if(args.from().isPresent() && logRecord.timeLocal().isBefore(args.from().get())) {
+            if (args.from().isPresent() && logRecord.timeLocal().isBefore(args.from().get())) {
                 return false;
             }
             return args.to().isEmpty() || !logRecord.timeLocal().isAfter(args.from().get());
@@ -39,7 +42,7 @@ public class StatisticsCollector {
         logRecords = logRecords.filter(checkDateRange);
         if(args.filterField()!= FilterFieldType.NONE) {
             logRecords = logRecords.filter(
-                log -> log.getValueByFieldName(args.filterField()).matches(args.filterValue()));
+                log -> Objects.requireNonNull(log.getValueByFieldName(args.filterField())).matches(args.filterValue()));
         }
         logRecords.forEach(log -> {
             logsCount.getAndIncrement();
@@ -52,7 +55,7 @@ public class StatisticsCollector {
         });
 
         if (logsCount.get() == 0) {
-            throw new RuntimeException("No logs found");
+            throw new LogsNotFoundException("No logs found after filtering");
         }
         LogInfoReport report = new LogInfoReport();
         report.logsCount(logsCount.get());
