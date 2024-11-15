@@ -35,22 +35,22 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(buildTableHeader(List.of("Metric", "Value")));
         sb.append(buildCell("Date from"));
         sb.append(buildCell(args.from().isPresent() ? args.from().get().toString() : "-"));
-        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildRowEnd());
         sb.append(buildCell("Date to"));
         sb.append(buildCell(args.to().isPresent() ? args.to().get().toString() : "-"));
-        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildRowEnd());
         sb.append(buildCell("Logs amount"));
         sb.append(buildCell(String.valueOf(report.logsCount())));
-        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildRowEnd());
         sb.append(buildCell("Unique IP amount"));
         sb.append(buildCell(String.valueOf(report.uniqueIPCount())));
-        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildRowEnd());
         sb.append(buildCell("Average bytes sent"));
         sb.append(buildCell(String.valueOf(report.avgAnswerSize())));
-        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildRowEnd());
         sb.append(buildCell("95p bytes sent"));
         sb.append(buildCell(String.valueOf(report.percentile95AnswerSize())));
-        sb.append(VERT_DELIM).append('\n');
+        sb.append(buildRowEnd());
         return sb.toString();
     }
 
@@ -109,6 +109,10 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         return VERT_DELIM+data;
     }
 
+    private String buildRowEnd(){
+        return VERT_DELIM+'\n';
+    }
+
     private String buildTableHeader(List<String> names) {
         StringBuilder sb = new StringBuilder(VERT_DELIM);
         for (String name : names) {
@@ -121,5 +125,4 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         sb.append('\n');
         return sb.toString();
     }
-
 }
