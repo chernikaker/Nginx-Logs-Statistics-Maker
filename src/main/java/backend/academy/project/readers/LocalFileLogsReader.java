@@ -2,24 +2,20 @@ package backend.academy.project.readers;
 
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.logs.LogRecordParser;
-import backend.academy.project.readers.exception.OpeningFileException;
+import backend.academy.project.logs.exception.LogParsingException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
-public class LocalFileLogsReader implements LogsReader {
+public class LocalFileLogsReader extends LogsReader {
 
-    private final FileSearcher searcher = new FileSearcher();
-    private final LogRecordParser parser = new LogRecordParser();
-
+    private static final Path ROOT_PATH = Paths.get("src", "main", "resources").toAbsolutePath();
     private final String globPath;
-    private final List<String> logFileNames = new ArrayList<>();
+
 
     public LocalFileLogsReader(String globPath) {
         this.globPath = globPath;
@@ -27,23 +23,22 @@ public class LocalFileLogsReader implements LogsReader {
 
     @Override
     public Stream<LogRecord> readLogLines() {
-        Path currentPath = Paths.get("src", "main", "resources").toAbsolutePath();
 
-        List<Path> logFiles = searcher.getLogFiles(globPath, currentPath);
-        Stream<String> logRecordStream = Stream.empty();
+        List<Path> logFiles = FileSearcher.getLogFiles(globPath, ROOT_PATH);
+        Stream<LogRecord> logRecordStream = Stream.empty();
         for (Path logFile : logFiles) {
             try {
-                logFileNames.add(logFile.getFileName().toString());
-                logRecordStream = Stream.concat(logRecordStream, Files.lines(logFile));
-            } catch (IOException e) {
-                throw new OpeningFileException("Can't open file " + logFile, e);
+                Stream<LogRecord> logs = Files
+                    .lines(logFile)
+                    .map(tryParseLog)
+                    .filter(Objects::nonNull);
+                logRecordStream = Stream.concat(logRecordStream, logs);
+                logSourceNames.add(logFile.getFileName().toString());
+            }  catch (IOException e) {
+                logger.warn("Can't open file {}. Current file skipped", logFile, e);
             }
         }
-        return logRecordStream.map(parser::parseLog);
+        return logRecordStream;
     }
 
-    @Override
-    public List<String> getLogFileNames() {
-        return Collections.unmodifiableList(logFileNames);
-    }
 }
