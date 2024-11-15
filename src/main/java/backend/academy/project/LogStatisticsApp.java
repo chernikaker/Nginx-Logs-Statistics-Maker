@@ -9,6 +9,7 @@ import backend.academy.project.report.data.StatisticsCollector;
 import backend.academy.project.report.view.SimpleStatisticsWriterFactory;
 import backend.academy.project.report.view.StatisticsFileWriter;
 import backend.academy.project.commandline.CommandLineArgsValidator;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -17,8 +18,17 @@ import java.util.stream.Stream;
 public class LogStatisticsApp {
 
     private static final Path reportPath = Paths.get("").toAbsolutePath();
+    private final PrintStream out;
 
-    public String report(String[] args) {
+    public LogStatisticsApp(PrintStream out) {
+        this.out = out;
+    }
+
+    public void run(String[] args) {
+        out.println(makeStatistics(args));
+    }
+
+    private String makeStatistics(String[] args) {
         try {
             CommandLineArgs arguments = CommandLineArgsParser.getArgs(args);
             CommandLineArgsValidator.validate(arguments);
