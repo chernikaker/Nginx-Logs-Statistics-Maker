@@ -1,6 +1,6 @@
 package backend.academy.project.logs;
 
-import backend.academy.project.logs.exception.ParsingLogException;
+import backend.academy.project.logs.exception.LogParsingException;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,17 +24,17 @@ public class LogRecordParser {
         Pattern logPattern = Pattern.compile(LOG_REGEX);
         Matcher logMatcher = logPattern.matcher(logLine);
         if (!logMatcher.matches()) {
-            throw new ParsingLogException("Can't parse log, invalid format: " + logLine);
+            throw new LogParsingException("Can't parse log, invalid format: " + logLine);
         }
         String remoteIp = logMatcher.group(1);
         if (!isValidStardardIp(remoteIp) && !isValidIpv6(remoteIp)) {
-            throw new ParsingLogException("Ip address has invalid format: " + remoteIp);
+            throw new LogParsingException("Ip address has invalid format: " + remoteIp);
         }
         String request = logMatcher.group(4);
         Pattern requestPattern = Pattern.compile(REQUEST_REGEX);
         Matcher requestMatcher = requestPattern.matcher(request);
         if (!requestMatcher.matches()) {
-            throw new ParsingLogException("Can't parse request: " + request);
+            throw new LogParsingException("Can't parse request: " + request);
         }
         String localDate = logMatcher.group(3);
         LocalDateTime dateTime = parseDateFromLogFormat(localDate);
@@ -94,7 +94,7 @@ public class LogRecordParser {
             OffsetDateTime offsetDateTime = OffsetDateTime.parse(logDate, formatter);
             return offsetDateTime.toLocalDateTime();
         } catch (DateTimeParseException e) {
-            throw new ParsingLogException("Can't parse date: " + logDate, e);
+            throw new LogParsingException("Can't parse date: " + logDate, e);
         }
     }
 }

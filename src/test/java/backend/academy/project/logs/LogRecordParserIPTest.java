@@ -1,6 +1,6 @@
 package backend.academy.project.logs;
 
-import backend.academy.project.logs.exception.ParsingLogException;
+import backend.academy.project.logs.exception.LogParsingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -38,7 +38,7 @@ public class LogRecordParserIPTest {
     public void standardIPDoesNotMatchPattern(String ipPart) {
         String log = ipPart + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: "+ipPart);
     }
 
@@ -47,7 +47,7 @@ public class LogRecordParserIPTest {
     public void standardIPHasInvalidValues(String ipPart) {
         String log = ipPart + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: "+ipPart);
     }
 
@@ -56,7 +56,7 @@ public class LogRecordParserIPTest {
     public void IPv6HasManyEmptyBlocks(String ipPart) {
         String log = ipPart + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: "+ipPart);
     }
 
@@ -65,7 +65,7 @@ public class LogRecordParserIPTest {
     public void IPv6HasAllPartsAndEmptyBlock(String ipPart) {
         String log = ipPart + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: "+ipPart);
     }
 
@@ -74,7 +74,7 @@ public class LogRecordParserIPTest {
     public void IPv6DoesNotMatchPattern(String ipPart) {
         String log = ipPart + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: "+ipPart);
     }
 
@@ -82,7 +82,7 @@ public class LogRecordParserIPTest {
     public void IPv6PartsHaveMoreThanFourChars() {
         String log = "1:1:1:1:1:11111:1:1" + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: ");
     }
 
@@ -90,7 +90,7 @@ public class LogRecordParserIPTest {
     public void IPv6HasNotEnoughParts() {
         String log = "1:1:1:1:1:1:1" + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: ");
     }
 
@@ -98,7 +98,7 @@ public class LogRecordParserIPTest {
     public void IPv6HasTooManyParts() {
         String log = "1:1:1:1:1:1:1:1:1" + correctLogPart;
         assertThatThrownBy(() -> logRecordParser.parseLog(log))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Ip address has invalid format: ");
     }
 }

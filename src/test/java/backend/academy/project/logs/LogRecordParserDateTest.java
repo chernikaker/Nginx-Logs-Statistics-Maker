@@ -1,6 +1,6 @@
 package backend.academy.project.logs;
 
-import backend.academy.project.logs.exception.ParsingLogException;
+import backend.academy.project.logs.exception.LogParsingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -30,7 +30,7 @@ public class LogRecordParserDateTest {
         String date ="04-Apr-2015-07:06:08 +0000";
         String logInfo = correctLogStart + date + correctLogEnd;
         assertThatThrownBy(() -> logRecordParser.parseLog(logInfo))
-            .isInstanceOf(ParsingLogException.class)
+            .isInstanceOf(LogParsingException.class)
             .hasMessage("Can't parse date: " + date);
     }
 
