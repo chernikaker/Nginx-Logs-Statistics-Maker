@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class LogStatisticsApp {
 
-    private static final Path reportPath = Paths.get("src", "main", "resources").toAbsolutePath();
+    private static final Path reportPath = Paths.get("").toAbsolutePath();
 
     public String report(String[] args) {
         try {

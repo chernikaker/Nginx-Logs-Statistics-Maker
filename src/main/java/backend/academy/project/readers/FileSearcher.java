@@ -24,10 +24,11 @@ public class FileSearcher {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attribs) {
                 FileSystem fs = FileSystems.getDefault();
-                String newGlobPattern = globPattern.startsWith("**\\") ? globPattern : "**/" + globPattern;
+                String newGlobPattern =  globPattern;
 
                 PathMatcher matcher = fs.getPathMatcher("glob:" + newGlobPattern);
-                if (matcher.matches(file)) {
+                Path relativePath = root.relativize(file);
+                if (matcher.matches(relativePath)) {
                     logFiles.add(file);
                 }
                 return FileVisitResult.CONTINUE;

@@ -2,8 +2,6 @@ package backend.academy.project.readers;
 
 import backend.academy.project.readers.exception.FindingFilesException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,7 +26,7 @@ public class FileSearcherTest {
 
     @Test
     public void oneLogFileInMultipleDirsTest() {
-        String glob = "log*";
+        String glob = "**/log*";
         Path newRoot = rootDir.resolve("oneLogMultipleDirectories");
         List<Path> logFiles = assertDoesNotThrow(() -> fileSearcher.getLogFiles(glob, newRoot));
         assertEquals(1, logFiles.size());
@@ -62,9 +60,9 @@ public class FileSearcherTest {
         assertEquals(rootDir.resolve("oneLogMultipleDirectories/dir1/dir2/logFile2.txt"), logFiles.getFirst());
     }
 
-    @ParameterizedTest
-    @CsvSource({"log*","**/log*"})
-    public void allLogsTest(String glob) {
+    @Test
+    public void allLogsTest() {
+        String glob = "**/log*";
         List<Path> logFiles = assertDoesNotThrow(() -> fileSearcher.getLogFiles(glob, rootDir));
         assertEquals(5, logFiles.size());
         assertTrue(logFiles.contains(rootDir.resolve("manyLogsOneDirectory", "logFile3.txt")));

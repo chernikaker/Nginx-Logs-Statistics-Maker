@@ -21,7 +21,7 @@ public class LogRecordParserTest {
         assertEquals("-", log.remoteUser());
         assertEquals(LocalDateTime.of(2015, 6, 4, 7, 6, 34), log.timeLocal());
         assertEquals(RequestType.GET, log.requestType());
-        assertEquals("/downloads/product_2", log.requestedResource());
+        assertEquals("/downloads/product_2", log.requestResource());
         assertEquals("HTTP/1.1", log.httpVersion());
         assertEquals(304, log.status());
         assertEquals(0, log.bytesSent());
