@@ -11,7 +11,9 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import static backend.academy.project.report.data.AnswerCodeCollection.getAnswerInfoByCode;
@@ -20,6 +22,7 @@ public abstract class StatisticsFileWriter {
 
     protected static final int TOP_RESULTS = 5;
     protected final String filename;
+    protected final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss", Locale.ENGLISH);
 
     protected StatisticsFileWriter(String filename) {
         this.filename = filename;
@@ -57,9 +60,9 @@ public abstract class StatisticsFileWriter {
         StringBuilder sb = new StringBuilder();
         sb.append(buildTableStart("Common info",2));
         sb.append(buildTableHeader(List.of("Metric", "Value")));
-        String fromDateView =  args.from().isPresent() ? args.from().get().toString() : "-";
+        String fromDateView =  args.from().isPresent() ? args.from().get().format(formatter) : "-";
         sb.append(buildRow(List.of("Date from", fromDateView)));
-        String toDateView = args.to().isPresent() ? args.to().get().toString() : "-";
+        String toDateView = args.to().isPresent() ? args.to().get().format(formatter) : "-";
         sb.append(buildRow(List.of("Date to", toDateView)));
         String filterView =  args.filterField() == FilterFieldType.NONE
             ? "-"
