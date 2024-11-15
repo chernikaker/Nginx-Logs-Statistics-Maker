@@ -1,6 +1,7 @@
 package backend.academy.project.report.data;
 
 import backend.academy.project.commandline.CommandLineArgs;
+import backend.academy.project.commandline.FilterFieldType;
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.logs.RequestType;
 import com.datadoghq.sketch.ddsketch.DDSketch;
@@ -35,10 +36,14 @@ public class StatisticsCollector {
         double relativeAccuracy = 0.01;
         double quantile = 0.95;
         DDSketch sketch = DDSketches.unboundedDense(relativeAccuracy);
-
-        logRecords.filter(checkDateRange).forEach(log -> {
+        logRecords = logRecords.filter(checkDateRange);
+        if(args.filterField()!= FilterFieldType.NONE) {
+            logRecords = logRecords.filter(
+                log -> log.getValueByFieldName(args.filterField()).matches(args.filterValue()));
+        }
+        logRecords.forEach(log -> {
             logsCount.getAndIncrement();
-            resourceFrequency.merge(log.requestedResource(), 1L, Long::sum);
+            resourceFrequency.merge(log.requestResource(), 1L, Long::sum);
             codeAnswerFrequency.merge(log.status(), 1L, Long::sum);
             requestTypeFrequency.merge(log.requestType(), 1L, Long::sum);
             totalBytesSent.addAndGet(log.bytesSent());
@@ -46,7 +51,9 @@ public class StatisticsCollector {
             uniqueIP.add(log.remoteAddress());
         });
 
-
+        if (logsCount.get() == 0) {
+            throw new RuntimeException("No logs found");
+        }
         LogInfoReport report = new LogInfoReport();
         report.logsCount(logsCount.get());
         report.resourceFrequency(resourceFrequency);
