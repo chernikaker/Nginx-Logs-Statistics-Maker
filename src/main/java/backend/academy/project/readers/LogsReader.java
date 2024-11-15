@@ -3,8 +3,6 @@ package backend.academy.project.readers;
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.logs.LogRecordParser;
 import backend.academy.project.logs.exception.LogParsingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,12 +32,4 @@ public abstract class LogsReader {
         return Collections.unmodifiableList(logSourceNames);
     }
 
-    public static LogsReader getReaderByPath(String path) {
-        try {
-            new URL(path);
-            return new UrlLogsReader(path);
-        } catch (MalformedURLException e) {
-            return new LocalFileLogsReader(path);
-        }
-    }
 }

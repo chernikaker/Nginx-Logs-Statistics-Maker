@@ -18,17 +18,26 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import static backend.academy.project.report.data.AnswerCodeCollection.getAnswerInfoByCode;
 
-public abstract class StatisticsFileWriter {
+public abstract class StatisticsWriter {
 
     protected static final int TOP_RESULTS = 5;
+    protected static final String DOUBLE_FORMAT = "%.6f";
+    protected static final int TWO_COLUMNS = 2;
+    protected static final int THREE_COLUMNS = 3;
+    protected static final int ONE_COLUMN = 1;
     protected final String filename;
     protected final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss", Locale.ENGLISH);
 
-    protected StatisticsFileWriter(String filename) {
+    protected StatisticsWriter(String filename) {
         this.filename = filename;
     }
 
-    public void writeResultsToFile(Path directoryPath, LogInfoReport report, CommandLineArgs args, List<String> resources)
+    public void writeResultsToFile(
+        Path directoryPath,
+        LogInfoReport report,
+        CommandLineArgs args,
+        List<String> resources
+    )
         throws FileAlreadyExistsException {
         String reportText = makeReportText(report, args, resources);
         if (Files.isRegularFile(directoryPath)) {
@@ -41,11 +50,11 @@ public abstract class StatisticsFileWriter {
         try {
             Files.writeString(filePath, reportText, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
-            throw new WritingToFileException("Can't write statistics to file " + filePath);
+            throw new WritingToFileException("Can't write statistics to file " + filePath, e);
         }
     }
 
-    protected String makeReportText(LogInfoReport report, CommandLineArgs args,  List<String> sources){
+    protected String makeReportText(LogInfoReport report, CommandLineArgs args,  List<String> sources) {
         StringBuilder sb = new StringBuilder();
         sb.append(buildHeader("Logs statistics report"));
         sb.append(makeSourceTable(sources));
@@ -58,23 +67,23 @@ public abstract class StatisticsFileWriter {
 
     protected String makeCommonInfoTable(LogInfoReport report, CommandLineArgs args) {
         StringBuilder sb = new StringBuilder();
-        sb.append(buildTableStart("Common info",2));
+        sb.append(buildTableStart("Common info", TWO_COLUMNS));
         sb.append(buildTableHeader(List.of("Metric", "Value")));
-        String fromDateView =  args.from().isPresent() ? args.from().get().format(formatter) : "-";
+        String fromDateView =  args.from().isPresent() ? args.from().orElseThrow().format(formatter) : "-";
         sb.append(buildRow(List.of("Date from", fromDateView)));
-        String toDateView = args.to().isPresent() ? args.to().get().format(formatter) : "-";
+        String toDateView = args.to().isPresent() ? args.to().orElseThrow().format(formatter) : "-";
         sb.append(buildRow(List.of("Date to", toDateView)));
         String filterView =  args.filterField() == FilterFieldType.NONE
             ? "-"
-            : args.filterField()+" = "+args.filterValue();
+            : args.filterField() + " = " + args.filterValue();
         sb.append(buildRow(List.of("Filter", filterView)));
         String logCountView = String.valueOf(report.logsCount());
         sb.append(buildRow(List.of("Logs amount", logCountView)));
         String ipCountView = String.valueOf(report.logsCount());
         sb.append(buildRow(List.of("Unique IP amount", ipCountView)));
-        String bytesSentView = String.format("%.6f",report.avgAnswerSize());
+        String bytesSentView = String.format(DOUBLE_FORMAT, report.avgAnswerSize());
         sb.append(buildRow(List.of("Average bytes sent", bytesSentView)));
-        String percentileView = String.format("%.6f",report.percentile95AnswerSize());
+        String percentileView = String.format(DOUBLE_FORMAT, report.percentile95AnswerSize());
         sb.append(buildRow(List.of("95 percentile of bytes sent", percentileView)));
         sb.append(buildTableEnd());
         return sb.toString();
@@ -82,7 +91,7 @@ public abstract class StatisticsFileWriter {
 
     protected String makeResourcesTable(LogInfoReport report) {
         StringBuilder sb = new StringBuilder();
-        sb.append(buildTableStart("Most frequently used resources (top "+TOP_RESULTS+")",2));
+        sb.append(buildTableStart("Most frequently used resources (top " + TOP_RESULTS + ")", TWO_COLUMNS));
         sb.append(buildTableHeader(List.of("Resource", "Usages")));
         List<Map.Entry<String, Long>> topResources = getTopByFrequency(report.resourceFrequency(), TOP_RESULTS);
         for (Map.Entry<String, Long> entry : topResources) {
@@ -96,8 +105,8 @@ public abstract class StatisticsFileWriter {
 
     protected String makeRequestTypeFrequencyTable(LogInfoReport report) {
         StringBuilder sb = new StringBuilder();
-        sb.append(buildTableStart("HTTP request types frequency",2));
-        sb.append(buildTableHeader(List.of("Type", "Amount")));
+        sb.append(buildTableStart("HTTP request types frequency", TWO_COLUMNS));
+        sb.append(buildTableHeader(List.of("Type", "Occurrences")));
         Map<RequestType, Long> requestTypes = report.requestTypeFrequency();
         for (Map.Entry<RequestType, Long> entry : getTopByFrequency(requestTypes, requestTypes.size())) {
             String type = entry.getKey().toString();
@@ -110,14 +119,14 @@ public abstract class StatisticsFileWriter {
 
     protected String makeAnswerCodeTable(LogInfoReport report) {
         StringBuilder sb = new StringBuilder();
-        sb.append(buildTableStart("Most frequently appeared answer codes (top "+TOP_RESULTS+")",3));
+        sb.append(buildTableStart("Most frequently appeared answer codes (top " + TOP_RESULTS + ")", THREE_COLUMNS));
         sb.append(buildTableHeader(List.of("Code", "Description", "Amount")));
         List<Map.Entry<Integer, Long>> topAnswers = getTopByFrequency(report.codeAnswerFrequency(), TOP_RESULTS);
         for (Map.Entry<Integer, Long> entry : topAnswers) {
             String code = entry.getKey().toString();
             String description = getAnswerInfoByCode(entry.getKey());
             String amount = entry.getValue().toString();
-            sb.append(buildRow(List.of(code,description, amount)));
+            sb.append(buildRow(List.of(code, description, amount)));
         }
         sb.append(buildTableEnd());
         return sb.toString();
@@ -125,7 +134,7 @@ public abstract class StatisticsFileWriter {
 
     protected String makeSourceTable(List<String> sources) {
         StringBuilder sb = new StringBuilder();
-        sb.append(buildTableStart(" Processed source files or URL", 1));
+        sb.append(buildTableStart(" Processed source files or URL", ONE_COLUMN));
         sb.append(buildTableHeader(List.of("Source")));
         for (String source : sources) {
             sb.append(buildRow(List.of(source)));
@@ -143,9 +152,14 @@ public abstract class StatisticsFileWriter {
     }
 
     protected abstract String buildCell(String data);
+
     protected abstract String buildTableHeader(List<String> names);
+
     protected abstract String buildRow(List<String> data);
+
     protected abstract String buildTableStart(String name, int cols);
+
     protected abstract String buildTableEnd();
+
     protected abstract String buildHeader(String info);
 }

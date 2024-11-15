@@ -2,20 +2,20 @@ package backend.academy.project.report.view;
 
 import java.util.List;
 
-public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
+public class MarkdownStatisticsWriter extends StatisticsWriter {
 
     private static final String HORIZ_DELIM = ":---------:";
-    private static final String VERT_DELIM = "|";
-    private static final String HEADER_SYMBOL = "#";
+    private static final char VERT_DELIM = '|';
+    private static final char HEADER_SYMBOL = '#';
     private static final String FILE_EXTENSION = ".md";
 
-    protected MarkdownStatisticsFileWriter(String filename) {
-        super(filename+FILE_EXTENSION);
+    protected MarkdownStatisticsWriter(String filename) {
+        super(filename + FILE_EXTENSION);
     }
 
     @Override
-    protected String buildCell(String data){
-        return VERT_DELIM+data;
+    protected String buildCell(String data) {
+        return VERT_DELIM + data;
     }
 
     @Override
@@ -38,32 +38,29 @@ public class MarkdownStatisticsFileWriter extends StatisticsFileWriter {
         for (String item : data) {
             sb.append(buildCell(item));
         }
-        sb.append(buildRowEnd());
+        sb.append(VERT_DELIM + '\n');
         return sb.toString();
     }
 
     @Override
-    protected String buildTableStart(String name, int cols){
+    protected String buildTableStart(String name, int cols) {
         StringBuilder sb = new StringBuilder();
         sb.append(HEADER_SYMBOL)
             .append(HEADER_SYMBOL)
-            .append(" ")
+            .append(' ')
             .append(name)
             .append('\n');
         return sb.toString();
     }
 
     @Override
-    protected  String buildTableEnd(){
+    protected  String buildTableEnd() {
         return "";
     }
 
     @Override
-    protected String buildHeader(String info){
-        return HEADER_SYMBOL+" "+info+'\n';
+    protected String buildHeader(String info) {
+        return HEADER_SYMBOL + ' ' + info + '\n';
     }
 
-    private String buildRowEnd(){
-        return VERT_DELIM+'\n';
-    }
 }

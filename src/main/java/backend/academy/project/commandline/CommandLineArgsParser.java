@@ -4,9 +4,7 @@ import com.beust.jcommander.JCommander;
 
 public class CommandLineArgsParser {
 
-    private CommandLineArgsParser() {
-        throw new UnsupportedOperationException("Parser should not be instantiated");
-    }
+    private CommandLineArgsParser() {}
 
     public static CommandLineArgs getArgs(String[] args) {
         CommandLineArgs jArgs = new CommandLineArgs();

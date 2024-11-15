@@ -1,7 +1,6 @@
 package backend.academy.project.readers;
 
 import backend.academy.project.logs.LogRecord;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,12 +36,16 @@ public class LocalFileLogsReader extends LogsReader {
                     .map(tryParseLog)
                     .filter(Objects::nonNull);
                 logRecordStream = Stream.concat(logRecordStream, logs);
-                logSourceNames.add(logFile.getFileName().toString());
-            }  catch (IOException e) {
+                Path fileName = logFile.getFileName();
+                if (fileName == null) {
+                    throw new NullPointerException("fileName of file " + logFile + " is null");
+                }
+                logSourceNames.add(fileName.toString());
+
+            } catch (Exception e) {
                 logger.warn("Can't open file {}. Current file skipped", logFile, e);
             }
         }
         return logRecordStream;
     }
-
 }

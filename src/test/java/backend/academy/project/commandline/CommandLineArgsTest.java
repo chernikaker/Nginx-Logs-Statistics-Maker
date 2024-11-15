@@ -27,8 +27,8 @@ public class CommandLineArgsTest {
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertTrue(jArgs.from().isPresent());
         assertTrue(jArgs.to().isPresent());
-        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().get());
-        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().get());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
+        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
         assertEquals(OuputFileType.ADOC, jArgs.type());
     }
 
@@ -47,8 +47,8 @@ public class CommandLineArgsTest {
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertTrue(jArgs.from().isPresent());
         assertTrue(jArgs.to().isPresent());
-        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().get());
-        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().get());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
+        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
         assertEquals(OuputFileType.MARKDOWN, jArgs.type());
     }
 
@@ -67,7 +67,7 @@ public class CommandLineArgsTest {
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertFalse(jArgs.from().isPresent());
         assertTrue(jArgs.to().isPresent());
-        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().get());
+        assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
         assertEquals(OuputFileType.ADOC, jArgs.type());
     }
 
@@ -86,7 +86,7 @@ public class CommandLineArgsTest {
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertFalse(jArgs.to().isPresent());
         assertTrue(jArgs.from().isPresent());
-        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().get());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
         assertEquals(OuputFileType.ADOC, jArgs.type());
     }
 

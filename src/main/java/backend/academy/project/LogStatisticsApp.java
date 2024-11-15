@@ -5,10 +5,11 @@ import backend.academy.project.commandline.CommandLineArgsParser;
 import backend.academy.project.commandline.CommandLineArgsValidator;
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.readers.LogsReader;
+import backend.academy.project.readers.LogsReaderCreator;
 import backend.academy.project.report.data.LogInfoReport;
 import backend.academy.project.report.data.StatisticsCollector;
 import backend.academy.project.report.view.SimpleWriterFactory;
-import backend.academy.project.report.view.StatisticsFileWriter;
+import backend.academy.project.report.view.StatisticsWriter;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,14 +33,15 @@ public class LogStatisticsApp {
         try {
             CommandLineArgs arguments = CommandLineArgsParser.getArgs(args);
             CommandLineArgsValidator.validate(arguments);
-            LogsReader reader = LogsReader.getReaderByPath(arguments.pathToLogs());
+            LogsReader reader = LogsReaderCreator.getReaderByPath(arguments.pathToLogs());
             Stream<LogRecord> lines = reader.readLogLines();
             List<String> processedResources = reader.getLogSourceNames();
             if (processedResources.isEmpty()) {
                 return "No files found";
             }
             LogInfoReport report = StatisticsCollector.calculateLogStatistics(lines, arguments);
-            StatisticsFileWriter viewer = new SimpleWriterFactory().createFileWriter(arguments.type(), arguments.filename());
+            SimpleWriterFactory writerFactory = new SimpleWriterFactory();
+            StatisticsWriter viewer = writerFactory.createWriter(arguments.type(), arguments.filename());
             viewer.writeResultsToFile(REPORT_PATH, report, arguments, processedResources);
             return "Report is written successfully to directory " + REPORT_PATH;
         } catch (Exception e) {

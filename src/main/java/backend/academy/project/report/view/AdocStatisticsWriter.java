@@ -3,19 +3,19 @@ package backend.academy.project.report.view;
 import java.util.List;
 
 
-public class AdocStatisticsFileWriter extends StatisticsFileWriter {
+public class AdocStatisticsWriter extends StatisticsWriter {
 
     private static final String TABLE_BORDER = "|====";
-    private static final String TABLE_CELL = "|";
-    private static final String HEADER_SYMBOL = "=";
+    private static final char TABLE_CELL = '|';
+    private static final char HEADER_SYMBOL = '=';
     private static final String FILE_EXTENSION = ".adoc";
 
-    protected AdocStatisticsFileWriter(String filename) {
-        super(filename+FILE_EXTENSION);
+    protected AdocStatisticsWriter(String filename) {
+        super(filename + FILE_EXTENSION);
     }
 
     @Override
-    protected String buildCell(String data){
+    protected String buildCell(String data) {
         return TABLE_CELL + data + '\n';
     }
 
@@ -39,25 +39,25 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
     }
 
     @Override
-    protected String buildTableStart(String name, int cols){
+    protected String buildTableStart(String name, int cols) {
         StringBuilder sb = new StringBuilder();
         sb.append(HEADER_SYMBOL)
             .append(HEADER_SYMBOL)
-            .append(" ")
+            .append(' ')
             .append(name)
             .append('\n');
-        sb.append("[cols=").append(cols).append("]").append('\n');
+        sb.append("[cols=").append(cols).append(']').append('\n');
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
     }
 
     @Override
     protected  String buildTableEnd() {
-        return TABLE_BORDER+"\n";
+        return TABLE_BORDER + '\n';
     }
 
     @Override
-    protected String buildHeader(String info){
-        return HEADER_SYMBOL+" "+info+'\n';
+    protected String buildHeader(String info) {
+        return HEADER_SYMBOL + " " + info + '\n';
     }
 }

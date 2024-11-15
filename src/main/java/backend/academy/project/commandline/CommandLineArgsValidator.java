@@ -6,13 +6,11 @@ import java.time.LocalDateTime;
 
 public class CommandLineArgsValidator {
 
-    private CommandLineArgsValidator() {
-        throw new UnsupportedOperationException("Validator should not be instantiated");
-    }
+    private CommandLineArgsValidator() {}
 
     public static void validate(CommandLineArgs args)  {
        if (args.from().isPresent() && args.to().isPresent()) {
-           validateDates(args.from().get(), args.to().get());
+           validateDates(args.from().orElseThrow(), args.to().orElseThrow());
        }
        validateFilter(args.filterField(), args.filterValue());
     }

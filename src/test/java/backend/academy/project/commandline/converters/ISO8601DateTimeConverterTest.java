@@ -19,7 +19,7 @@ public class ISO8601DateTimeConverterTest {
     public void convertLocalDateTime(String sampleDateTime) {
         Optional<LocalDateTime> dt = assertDoesNotThrow(() -> converter.convert(sampleDateTime));
         assertTrue(dt.isPresent());
-        LocalDateTime dateTime = dt.get();
+        LocalDateTime dateTime = dt.orElseThrow();
         assertEquals(LocalDateTime.of(2005, 8, 9, 18, 31, 42), dateTime);
     }
 
@@ -28,7 +28,7 @@ public class ISO8601DateTimeConverterTest {
     public void convertLocalDateOnly(String sampleDateTime) {
         Optional<LocalDateTime> dt = assertDoesNotThrow(() -> converter.convert(sampleDateTime));
         assertTrue(dt.isPresent());
-        LocalDateTime dateTime = dt.get();
+        LocalDateTime dateTime = dt.orElseThrow();
         assertEquals(LocalDateTime.of(2005, 8, 9, 0, 0, 0), dateTime);
     }
 
