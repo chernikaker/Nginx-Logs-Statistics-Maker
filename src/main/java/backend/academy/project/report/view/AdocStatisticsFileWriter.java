@@ -44,9 +44,9 @@ public class AdocStatisticsFileWriter extends StatisticsFileWriter {
         sb.append(buildCell("Unique IP amount"));
         sb.append(buildCell(String.valueOf(report.uniqueIPCount())));
         sb.append(buildCell("Average bytes sent"));
-        sb.append(buildCell(String.valueOf(report.avgAnswerSize())));
+        sb.append(buildCell(String.format("%.6f",report.avgAnswerSize())));
         sb.append(buildCell("95p bytes sent"));
-        sb.append(buildCell(String.valueOf(report.percentile95AnswerSize())));
+        sb.append(buildCell(String.format("%.6f",report.percentile95AnswerSize())));
         sb.append(TABLE_BORDER).append('\n');
         return sb.toString();
     }
