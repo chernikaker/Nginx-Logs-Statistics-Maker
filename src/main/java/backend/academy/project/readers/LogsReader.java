@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +38,10 @@ public abstract class LogsReader {
 
     public static LogsReader getReaderByPath(String path) {
         try {
-            new URI(path).toURL();
+            new URL(path);
             return new UrlLogsReader(path);
         } catch (MalformedURLException e) {
             return new LocalFileLogsReader(path);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         }
     }
 }
