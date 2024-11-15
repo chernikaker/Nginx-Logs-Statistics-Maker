@@ -4,7 +4,11 @@ import com.beust.jcommander.JCommander;
 
 public class CommandLineArgsParser {
 
-    public static CommandLineArgs getArgs(String[] args){
+    private CommandLineArgsParser() {
+        throw new UnsupportedOperationException("Parser should not be instantiated");
+    }
+
+    public static CommandLineArgs getArgs(String[] args) {
         CommandLineArgs jArgs = new CommandLineArgs();
         JCommander helloCmd = JCommander.newBuilder()
             .addObject(jArgs)
