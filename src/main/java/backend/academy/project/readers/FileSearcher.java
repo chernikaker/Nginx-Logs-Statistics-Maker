@@ -16,6 +16,10 @@ import java.util.List;
 
 public class FileSearcher {
 
+    private FileSearcher() {
+        throw new UnsupportedOperationException("FileSearcher should not be instantiated");
+    }
+
     public static List<Path> getLogFiles(String globPattern, Path root) {
 
         List<Path> logFiles = new ArrayList<>();

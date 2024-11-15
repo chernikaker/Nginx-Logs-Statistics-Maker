@@ -2,9 +2,9 @@ package backend.academy.project.report.view;
 
 import backend.academy.project.commandline.OuputFileType;
 
-public class SimpleStatisticsWriterFactory {
+public class SimpleWriterFactory {
 
-    public StatisticsFileWriter createStatisticsFileWriter(OuputFileType fileType, String filename) {
+    public StatisticsFileWriter createFileWriter(OuputFileType fileType, String filename) {
         return switch (fileType) {
             case MARKDOWN -> new MarkdownStatisticsFileWriter(filename);
             case ADOC -> new AdocStatisticsFileWriter(filename);

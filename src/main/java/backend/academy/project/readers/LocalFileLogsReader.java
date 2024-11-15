@@ -17,7 +17,7 @@ public class LocalFileLogsReader extends LogsReader {
 
     public LocalFileLogsReader(String globPath, Path rootPath) {
         this.globPath = globPath;
-        this.rootPath= rootPath;
+        this.rootPath = rootPath;
     }
 
     public LocalFileLogsReader(String globPath) {

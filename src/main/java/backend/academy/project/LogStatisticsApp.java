@@ -2,13 +2,13 @@ package backend.academy.project;
 
 import backend.academy.project.commandline.CommandLineArgs;
 import backend.academy.project.commandline.CommandLineArgsParser;
+import backend.academy.project.commandline.CommandLineArgsValidator;
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.readers.LogsReader;
 import backend.academy.project.report.data.LogInfoReport;
 import backend.academy.project.report.data.StatisticsCollector;
-import backend.academy.project.report.view.SimpleStatisticsWriterFactory;
+import backend.academy.project.report.view.SimpleWriterFactory;
 import backend.academy.project.report.view.StatisticsFileWriter;
-import backend.academy.project.commandline.CommandLineArgsValidator;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class LogStatisticsApp {
 
-    private static final Path reportPath = Paths.get("").toAbsolutePath();
+    private static final Path REPORT_PATH = Paths.get("").toAbsolutePath();
     private final PrintStream out;
 
     public LogStatisticsApp(PrintStream out) {
@@ -39,11 +39,11 @@ public class LogStatisticsApp {
                 return "No files found";
             }
             LogInfoReport report = StatisticsCollector.calculateLogStatistics(lines, arguments);
-            StatisticsFileWriter viewer = new SimpleStatisticsWriterFactory().createStatisticsFileWriter(arguments.type(), arguments.filename());
-            viewer.writeResultsToFile(reportPath, report, arguments, processedResources);
-            return "Report is written successfully to directory "+ reportPath;
+            StatisticsFileWriter viewer = new SimpleWriterFactory().createFileWriter(arguments.type(), arguments.filename());
+            viewer.writeResultsToFile(REPORT_PATH, report, arguments, processedResources);
+            return "Report is written successfully to directory " + REPORT_PATH;
         } catch (Exception e) {
-            return "Error occured: "+e.getMessage();
+            return "Error occured: " + e.getMessage();
         }
     }
 

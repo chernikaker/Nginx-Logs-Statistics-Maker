@@ -6,6 +6,10 @@ import java.util.NoSuchElementException;
 
 public class AnswerCodeCollection {
 
+    private AnswerCodeCollection() {
+        throw new UnsupportedOperationException("AnswerCodeCollection should not be instantiated");
+    }
+
     private static final Map<Integer, String> codeNames;
 
     static {
