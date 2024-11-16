@@ -17,7 +17,7 @@ import net.agkn.hll.HLL;
 
 public class StatisticsCollector {
 
-    private final static double RELATIVE_ACCURACY = 0.01;
+    private final static double RELATIVE_ACCURACY = 0.001;
     private final static double QUANTILE = 0.95;
     private final static int LOG_2_M = 14;
     private final static int REGISTER_WIDTH = 5;
@@ -39,8 +39,6 @@ public class StatisticsCollector {
         Map<RequestType, Long> requestTypeFrequency = new HashMap<>();
         AtomicLong totalBytesSent = new AtomicLong();
         HLL hll = new HLL(LOG_2_M, REGISTER_WIDTH);
-
-
         DDSketch sketch = DDSketches.unboundedDense(RELATIVE_ACCURACY);
         Stream<LogRecord> filteredRecords = logRecords.filter(checkDateRange);
         if (args.filterField() != FilterFieldType.NONE) {
