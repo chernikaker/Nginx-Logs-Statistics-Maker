@@ -1,6 +1,7 @@
 package backend.academy.project.commandline;
 
 import backend.academy.project.commandline.exception.DateValidationException;
+import backend.academy.project.commandline.exception.EmptyPathValidationException;
 import backend.academy.project.commandline.exception.FileNamingException;
 import backend.academy.project.commandline.exception.FilterValidationException;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,7 @@ public class CommandLineArgsValidatorTest {
     }
 
     @Test
-    public void invalidFilterFieldWithoutValueMock() {
+    public void invalidFilterFieldWithoutValueTest() {
         makeFilterWithoutValueMock(jArgs);
         assertThatThrownBy(() -> CommandLineArgsValidator.validate(jArgs))
             .isInstanceOf(FilterValidationException.class)
@@ -81,16 +82,24 @@ public class CommandLineArgsValidatorTest {
     }
 
     @Test
-    public void invalidFilterValueWithoutField() {
+    public void invalidFilterValueWithoutFieldTest() {
         makeFilterValueWithoutFieldMock(jArgs);
         assertThatThrownBy(() -> CommandLineArgsValidator.validate(jArgs))
             .isInstanceOf(FilterValidationException.class)
             .hasMessageContaining("Argument [--filter-value] is used without [--filter-field]");
     }
 
+    @Test
+    public void invalidEmptyPathTest() {
+        makeEmptyPathMock(jArgs);
+        assertThatThrownBy(() -> CommandLineArgsValidator.validate(jArgs))
+            .isInstanceOf(EmptyPathValidationException.class)
+            .hasMessage("Path is empty");
+    }
 
 
     private static void makeDefaultArgsMock(CommandLineArgs jArgs){
+        Mockito.when(jArgs.pathToLogs()).thenReturn("logs*");
         Mockito.when(jArgs.from()).thenReturn(Optional.empty());
         Mockito.when(jArgs.to()).thenReturn(Optional.empty());
         Mockito.when(jArgs.filterField()).thenReturn(FilterFieldType.NONE);
@@ -138,5 +147,10 @@ public class CommandLineArgsValidatorTest {
     private static void makeFilterValueWithoutFieldMock(CommandLineArgs jArgs) {
         makeDefaultArgsMock(jArgs);
         Mockito.when(jArgs.filterValue()).thenReturn("GET");
+    }
+
+    private static void makeEmptyPathMock(CommandLineArgs jArgs) {
+        makeDefaultArgsMock(jArgs);
+        Mockito.when(jArgs.pathToLogs()).thenReturn("  ");
     }
 }

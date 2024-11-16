@@ -18,6 +18,7 @@ public class CommandLineArgsValidator {
        }
        validateFilter(args.filterField(), args.filterValue());
        validateFilename(args.filename());
+       validatePath(args.pathToLogs());
     }
 
     private static void validateDates(LocalDateTime from, LocalDateTime to) {
