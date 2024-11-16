@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LogRecordParserDateTest {
 
-    private final LogRecordParser logRecordParser = new LogRecordParser();
     private final String correctLogStart = "80.91.33.133 - - [";
     private final String  correctLogEnd = "] \"GET /downloads/product_1 HTTP/1.1\" 304 0 \"-\" \"Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.17)\"";
 
@@ -21,7 +20,7 @@ public class LogRecordParserDateTest {
     public void correctDateParsingDifferentMonth(String month) {
         String date ="04/" + month + "/2015:07:06:08 +0000";
         String logInfo = correctLogStart + date + correctLogEnd;
-        LogRecord log = assertDoesNotThrow(() -> logRecordParser.parseLog(logInfo));
+        LogRecord log = assertDoesNotThrow(() -> LogRecordParser.parseLog(logInfo));
         assertEquals(LocalDateTime.of(2015, getMonthNum(month), 4, 7, 6, 8), log.timeLocal());
     }
 
@@ -29,7 +28,7 @@ public class LogRecordParserDateTest {
     public void incorrectDateFormatParsing() {
         String date ="04-Apr-2015-07:06:08 +0000";
         String logInfo = correctLogStart + date + correctLogEnd;
-        assertThatThrownBy(() -> logRecordParser.parseLog(logInfo))
+        assertThatThrownBy(() -> LogRecordParser.parseLog(logInfo))
             .isInstanceOf(LogParsingException.class)
             .hasMessage("Can't parse date: " + date);
     }

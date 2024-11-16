@@ -11,12 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LogRecordParserTest {
 
-    private final LogRecordParser parser = new LogRecordParser();
-
     @Test
     public void parseCorrectLogLine() {
         String logLine = "128.199.51.40 - - [04/Jun/2015:07:06:34 +0000] \"GET /downloads/product_2 HTTP/1.1\" 304 0 \"-\" \"Debian APT-HTTP/1.3 (0.9.7.9)\"";
-        LogRecord log = assertDoesNotThrow(() -> parser.parseLog(logLine));
+        LogRecord log = assertDoesNotThrow(() -> LogRecordParser.parseLog(logLine));
         assertEquals("128.199.51.40", log.remoteAddress());
         assertEquals("-", log.remoteUser());
         assertEquals(LocalDateTime.of(2015, 6, 4, 7, 6, 34), log.timeLocal());
@@ -32,7 +30,7 @@ public class LogRecordParserTest {
     @Test
     public void parseIncorrectFormatLogLine() {
         String logLine = "128.199.51.40 - 04/Jun/2015:07:06:34 +0000 GET /downloads/product_2 HTTP/1.1 304 0 - Debian APT-HTTP/1.3 (0.9.7.9)";
-        assertThatThrownBy(() -> parser.parseLog(logLine))
+        assertThatThrownBy(() -> LogRecordParser.parseLog(logLine))
             .isInstanceOf(LogParsingException.class)
             .hasMessage("Can't parse log, invalid format: " + logLine);
     }
@@ -40,7 +38,7 @@ public class LogRecordParserTest {
     @Test
     public void parseIncorrectAnswerCodeLogLine() {
         String logLine = "128.199.51.40 - 04/Jun/2015:07:06:34 +0000 GET /downloads/product_2 HTTP/1.1 3004 0 - Debian APT-HTTP/1.3 (0.9.7.9)";
-        assertThatThrownBy(() -> parser.parseLog(logLine))
+        assertThatThrownBy(() -> LogRecordParser.parseLog(logLine))
             .isInstanceOf(LogParsingException.class)
             .hasMessage("Can't parse log, invalid format: " + logLine);
     }
@@ -48,7 +46,7 @@ public class LogRecordParserTest {
     @Test
     public void parseIncorrectNumbersLogLine() {
         String logLine = "128.199.51.40 - 04/Jun/2015:07:06:34 +0000 GET /downloads/product_2 HTTP/1.1 300Error4 0Error - Debian APT-HTTP/1.3 (0.9.7.9)";
-        assertThatThrownBy(() -> parser.parseLog(logLine))
+        assertThatThrownBy(() -> LogRecordParser.parseLog(logLine))
             .isInstanceOf(LogParsingException.class)
             .hasMessage("Can't parse log, invalid format: " + logLine);
     }
@@ -57,14 +55,14 @@ public class LogRecordParserTest {
     @CsvSource({"GET","POST","PUT","PATCH","OPTIONS","HEAD"})
     public void parseAllRequestTypesLogLine(String requestType) {
         String logLine = "128.199.51.40 - - [04/Jun/2015:07:06:34 +0000] \""+requestType+" /downloads/product_2 HTTP/1.1\" 304 0 \"-\" \"Debian APT-HTTP/1.3 (0.9.7.9)\"";
-        LogRecord log = assertDoesNotThrow(() -> parser.parseLog(logLine));
+        LogRecord log = assertDoesNotThrow(() -> LogRecordParser.parseLog(logLine));
         assertEquals(RequestType.valueOf(requestType), log.requestType());
     }
 
     @Test
     public void parseIncorrectRequestTypeLogLine() {
         String logLine = "128.199.51.40 - - [04/Jun/2015:07:06:34 +0000] \"ERROR /downloads/product_2 HTTP/1.1\" 304 0 \"-\" \"Debian APT-HTTP/1.3 (0.9.7.9)\"";
-        assertThatThrownBy(() -> parser.parseLog(logLine))
+        assertThatThrownBy(() -> LogRecordParser.parseLog(logLine))
             .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Can't parse request: ");
     }
@@ -72,7 +70,7 @@ public class LogRecordParserTest {
     @Test
     public void parseIncorrectHTTPVersionFormatLogLine() {
         String logLine = "128.199.51.40 - - [04/Jun/2015:07:06:34 +0000] \"GET /downloads/product_2 ERROR/1.1\" 304 0 \"-\" \"Debian APT-HTTP/1.3 (0.9.7.9)\"";
-        assertThatThrownBy(() -> parser.parseLog(logLine))
+        assertThatThrownBy(() -> LogRecordParser.parseLog(logLine))
             .isInstanceOf(LogParsingException.class)
             .hasMessageContaining("Can't parse request: ");
     }
