@@ -37,7 +37,7 @@ public class LogStatisticsApp {
             Stream<LogRecord> lines = reader.readLogLines();
             List<String> processedResources = reader.getLogSourceNames();
             if (processedResources.isEmpty()) {
-                return "No files found";
+                return "No files found. Check --path value";
             }
             LogInfoReport report = StatisticsCollector.calculateLogStatistics(lines, arguments);
             SimpleWriterFactory writerFactory = new SimpleWriterFactory();
