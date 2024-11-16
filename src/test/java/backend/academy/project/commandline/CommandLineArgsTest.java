@@ -17,7 +17,10 @@ public class CommandLineArgsTest {
             "--path", "logs/2024*",
             "--from", "2024-01-01",
             "--to", "2024-02-01",
-            "--format", "adoc"
+            "--format", "adoc",
+            "--filename", "report",
+            "--filter-field", "status",
+            "--filter-value", "GET"
         };
         CommandLineArgs jArgs = new CommandLineArgs();
         JCommander helloCmd = JCommander.newBuilder()
@@ -30,6 +33,9 @@ public class CommandLineArgsTest {
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
         assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
         assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals("report", jArgs.filename());
+        assertEquals(FilterFieldType.STATUS, jArgs.filterField());
+        assertEquals("GET", jArgs.filterValue());
     }
 
     @Test
@@ -37,7 +43,10 @@ public class CommandLineArgsTest {
         String[] args = new String[] {
             "--path", "logs/2024*",
             "--from", "2024-01-01",
-            "--to", "2024-02-01"
+            "--to", "2024-02-01",
+            "--filename", "report",
+            "--filter-field", "status",
+            "--filter-value", "GET"
         };
         CommandLineArgs jArgs = new CommandLineArgs();
         JCommander helloCmd = JCommander.newBuilder()
@@ -50,6 +59,9 @@ public class CommandLineArgsTest {
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
         assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
         assertEquals(OuputFileType.MARKDOWN, jArgs.type());
+        assertEquals("report", jArgs.filename());
+        assertEquals(FilterFieldType.STATUS, jArgs.filterField());
+        assertEquals("GET", jArgs.filterValue());
     }
 
     @Test
@@ -57,7 +69,10 @@ public class CommandLineArgsTest {
         String[] args = new String[] {
             "--path", "logs/2024*",
             "--to", "2024-02-01",
-            "--format", "adoc"
+            "--format", "adoc",
+            "--filename", "report",
+            "--filter-field", "status",
+            "--filter-value", "GET"
         };
         CommandLineArgs jArgs = new CommandLineArgs();
         JCommander helloCmd = JCommander.newBuilder()
@@ -69,14 +84,19 @@ public class CommandLineArgsTest {
         assertTrue(jArgs.to().isPresent());
         assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
         assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals("report", jArgs.filename());
+        assertEquals(FilterFieldType.STATUS, jArgs.filterField());
+        assertEquals("GET", jArgs.filterValue());
     }
 
     @Test
-    public void allArgsCorrectNoToDateTest() {
+    public void allArgsCorrectNoFilenameTest() {
         String[] args = new String[] {
             "--path", "logs/2024*",
             "--from", "2024-01-01",
-            "--format", "adoc"
+            "--format", "adoc",
+            "--filter-field", "status",
+            "--filter-value", "GET"
         };
         CommandLineArgs jArgs = new CommandLineArgs();
         JCommander helloCmd = JCommander.newBuilder()
@@ -88,6 +108,59 @@ public class CommandLineArgsTest {
         assertTrue(jArgs.from().isPresent());
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
         assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals("statistics_report", jArgs.filename());
+        assertEquals(FilterFieldType.STATUS, jArgs.filterField());
+        assertEquals("GET", jArgs.filterValue());
+    }
+
+    @Test
+    public void allArgsCorrectNoToDateTest() {
+        String[] args = new String[] {
+            "--path", "logs/2024*",
+            "--from", "2024-01-01",
+            "--format", "adoc",
+            "--filename", "report",
+            "--filter-field", "status",
+            "--filter-value", "GET"
+        };
+        CommandLineArgs jArgs = new CommandLineArgs();
+        JCommander helloCmd = JCommander.newBuilder()
+            .addObject(jArgs)
+            .build();
+        helloCmd.parse(args);
+        assertEquals("logs/2024*", jArgs.pathToLogs());
+        assertFalse(jArgs.to().isPresent());
+        assertTrue(jArgs.from().isPresent());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
+        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(FilterFieldType.STATUS, jArgs.filterField());
+        assertEquals("GET", jArgs.filterValue());
+    }
+
+    @Test
+    public void allArgsCorrectNoFilterTest() {
+        String[] args = new String[] {
+            "--path", "logs/2024*",
+            "--from", "2024-01-01",
+            "--format", "adoc",
+            "--filename", "report"
+        };
+        CommandLineArgs jArgs = new CommandLineArgs();
+        JCommander helloCmd = JCommander.newBuilder()
+            .addObject(jArgs)
+            .build();
+        helloCmd.parse(args);
+        assertEquals("logs/2024*", jArgs.pathToLogs());
+        assertFalse(jArgs.to().isPresent());
+        assertTrue(jArgs.from().isPresent());
+        assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
+        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals("report", jArgs.filename());
+        assertEquals(FilterFieldType.NONE, jArgs.filterField());
+        assertEquals("", jArgs.filterValue());
     }
 
     @Test
@@ -145,5 +218,21 @@ public class CommandLineArgsTest {
         assertThatThrownBy(() -> helloCmd.parse(args))
             .isInstanceOf(ParameterException.class)
             .hasMessage("Invalid ISO8601 local date: invalid_date");
+    }
+
+    @Test
+    public void IncorrectFilterFieldTest() {
+        String[] args = new String[] {
+            "--path", "logs/2024*",
+            "--filter-field", "error",
+            "--filter-value", "GET"
+        };
+        CommandLineArgs jArgs = new CommandLineArgs();
+        JCommander helloCmd = JCommander.newBuilder()
+            .addObject(jArgs)
+            .build();
+        assertThatThrownBy(() -> helloCmd.parse(args))
+            .isInstanceOf(ParameterException.class)
+            .hasMessageContaining("--filter-field");
     }
 }
