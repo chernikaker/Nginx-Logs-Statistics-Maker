@@ -15,6 +15,7 @@ public class CommandLineArgsValidator {
            validateDates(args.from().orElseThrow(), args.to().orElseThrow());
        }
        validateFilter(args.filterField(), args.filterValue());
+       validateFilename(args.filename());
     }
 
     private static void validateDates(LocalDateTime from, LocalDateTime to) {
@@ -33,7 +34,7 @@ public class CommandLineArgsValidator {
     }
 
     private static void validateFilename(String filename) {
-        if (!filename.matches(FILENAME_REGEX)) {
+        if (!filename.matches(FILENAME_REGEX) || filename.isBlank()) {
             throw new FileNamingException("file name is invalid: " + filename);
         }
     }
