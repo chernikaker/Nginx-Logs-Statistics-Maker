@@ -1,6 +1,7 @@
 package backend.academy.project.commandline;
 
 import backend.academy.project.commandline.exception.DateValidationException;
+import backend.academy.project.commandline.exception.EmptyPathValidationException;
 import backend.academy.project.commandline.exception.FileNamingException;
 import backend.academy.project.commandline.exception.FilterValidationException;
 import java.time.LocalDateTime;
@@ -37,6 +38,12 @@ public class CommandLineArgsValidator {
     private static void validateFilename(String filename) {
         if (!filename.matches(FILENAME_REGEX) || filename.isBlank()) {
             throw new FileNamingException("file name is invalid: " + filename);
+        }
+    }
+
+    private static void validatePath(String path) {
+        if (path.isBlank()) {
+            throw new EmptyPathValidationException("Path is empty");
         }
     }
 }
