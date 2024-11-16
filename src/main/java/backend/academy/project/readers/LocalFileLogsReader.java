@@ -23,7 +23,6 @@ public class LocalFileLogsReader extends LogsReader {
         this(globPath, Paths.get("").toAbsolutePath());
     }
 
-
     @Override
     public Stream<LogRecord> readLogLines() {
 
@@ -31,19 +30,19 @@ public class LocalFileLogsReader extends LogsReader {
         Stream<LogRecord> logRecordStream = Stream.empty();
         for (Path logFile : logFiles) {
             try {
+                Path fileName = logFile.getFileName();
+                if (fileName == null) {
+                    throw new NullPointerException("fileName of file " + logFile + " is null");
+                }
                 Stream<LogRecord> logs = Files
                     .lines(logFile)
                     .map(tryParseLog)
                     .filter(Objects::nonNull);
                 logRecordStream = Stream.concat(logRecordStream, logs);
-                Path fileName = logFile.getFileName();
-                if (fileName == null) {
-                    throw new NullPointerException("fileName of file " + logFile + " is null");
-                }
                 logSourceNames.add(fileName.toString());
 
             } catch (Exception e) {
-                logger.warn("Can't open file {}. Current file skipped", logFile, e);
+                logger.warn("Can't process file {}. Current file skipped", logFile, e);
             }
         }
         return logRecordStream;

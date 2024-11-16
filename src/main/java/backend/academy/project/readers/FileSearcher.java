@@ -25,9 +25,7 @@ public class FileSearcher {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attribs) {
                 FileSystem fs = FileSystems.getDefault();
-                String newGlobPattern =  globPattern;
-
-                PathMatcher matcher = fs.getPathMatcher("glob:" + newGlobPattern);
+                PathMatcher matcher = fs.getPathMatcher("glob:" + globPattern);
                 Path relativePath = root.relativize(file);
                 Path name = relativePath.getFileName();
                 if (matcher.matches(relativePath) || matcher.matches(name)) {
