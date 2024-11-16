@@ -1,11 +1,13 @@
 package backend.academy.project.commandline;
 
 import backend.academy.project.commandline.exception.DateValidationException;
+import backend.academy.project.commandline.exception.FileNamingException;
 import backend.academy.project.commandline.exception.FilterValidationException;
 import java.time.LocalDateTime;
 
 public class CommandLineArgsValidator {
 
+    private static final String FILENAME_REGEX = "^[^<>:\"/\\\\|?*]+$";
     private CommandLineArgsValidator() {}
 
     public static void validate(CommandLineArgs args)  {
@@ -27,6 +29,12 @@ public class CommandLineArgsValidator {
         }
         if (filterField != FilterFieldType.NONE && filterValue.isEmpty()) {
             throw new FilterValidationException("Argument [--filter-field] is used without [--filter-value]");
+        }
+    }
+
+    private static void validateFilename(String filename) {
+        if (!filename.matches(FILENAME_REGEX)) {
+            throw new FileNamingException("file name is invalid: " + filename);
         }
     }
 }
