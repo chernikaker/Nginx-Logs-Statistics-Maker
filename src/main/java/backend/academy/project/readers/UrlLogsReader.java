@@ -22,13 +22,13 @@ public class UrlLogsReader extends LogsReader {
 
     @Override
     public Stream<LogRecord> readLogLines() {
+        try {
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create(path))
             .header("User-Agent", USER_AGENT)
             .GET()
             .build();
 
-        try {
             Stream<LogRecord> logs = HTTP_CLIENT
                 .send(request, HttpResponse.BodyHandlers.ofString())
                 .body()
@@ -38,7 +38,7 @@ public class UrlLogsReader extends LogsReader {
             logSourceNames.add(path);
             return logs;
 
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             throw new ReadingFromUrlException("Error while reading log lines from " + path, e);
         }
     }
