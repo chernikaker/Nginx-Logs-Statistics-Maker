@@ -197,4 +197,12 @@ public class CommandLineArgsTest {
             .isInstanceOf(ParameterException.class)
             .hasMessageContaining("--filter-field");
     }
+
+    @Test
+    public void PathFlagWithoutValueError() {
+        String[] args = new String[] {"--path"};
+        assertThatThrownBy(() -> CommandLineArgsParser.getArgs(args))
+            .isInstanceOf(ParameterException.class)
+            .hasMessageContaining("--path");
+    }
 }
