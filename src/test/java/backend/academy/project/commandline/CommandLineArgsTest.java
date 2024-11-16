@@ -48,11 +48,7 @@ public class CommandLineArgsTest {
             "--filter-field", "status",
             "--filter-value", "GET"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        helloCmd.parse(args);
+        CommandLineArgs jArgs = CommandLineArgsParser.getArgs(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertTrue(jArgs.from().isPresent());
         assertTrue(jArgs.to().isPresent());
@@ -74,11 +70,7 @@ public class CommandLineArgsTest {
             "--filter-field", "status",
             "--filter-value", "GET"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        helloCmd.parse(args);
+        CommandLineArgs jArgs = CommandLineArgsParser.getArgs(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertFalse(jArgs.from().isPresent());
         assertTrue(jArgs.to().isPresent());
@@ -98,11 +90,7 @@ public class CommandLineArgsTest {
             "--filter-field", "status",
             "--filter-value", "GET"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        helloCmd.parse(args);
+        CommandLineArgs jArgs = CommandLineArgsParser.getArgs(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertFalse(jArgs.to().isPresent());
         assertTrue(jArgs.from().isPresent());
@@ -124,11 +112,7 @@ public class CommandLineArgsTest {
             "--filter-field", "status",
             "--filter-value", "GET"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        helloCmd.parse(args);
+        CommandLineArgs jArgs = CommandLineArgsParser.getArgs(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertFalse(jArgs.to().isPresent());
         assertTrue(jArgs.from().isPresent());
@@ -147,11 +131,7 @@ public class CommandLineArgsTest {
             "--format", "adoc",
             "--filename", "report"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        helloCmd.parse(args);
+        CommandLineArgs jArgs = CommandLineArgsParser.getArgs(args);
         assertEquals("logs/2024*", jArgs.pathToLogs());
         assertFalse(jArgs.to().isPresent());
         assertTrue(jArgs.from().isPresent());
@@ -167,10 +147,7 @@ public class CommandLineArgsTest {
     public void NoRequiredPathTest() {
         String[] args = new String[] {};
         CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        assertThatThrownBy(() -> helloCmd.parse(args))
+        assertThatThrownBy(() -> CommandLineArgsParser.getArgs(args))
             .isInstanceOf(ParameterException.class)
             .hasMessageContaining("--path");
     }
@@ -181,11 +158,7 @@ public class CommandLineArgsTest {
             "--path", "logs/2024*",
             "--format", "txt"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        assertThatThrownBy(() -> helloCmd.parse(args))
+        assertThatThrownBy(() -> CommandLineArgsParser.getArgs(args))
             .isInstanceOf(ParameterException.class)
             .hasMessageContaining("--format");
     }
@@ -196,11 +169,7 @@ public class CommandLineArgsTest {
             "--path", "logs/2024*",
             "--from", "invalid_date"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        assertThatThrownBy(() -> helloCmd.parse(args))
+        assertThatThrownBy(() -> CommandLineArgsParser.getArgs(args))
             .isInstanceOf(ParameterException.class)
             .hasMessage("Invalid ISO8601 local date: invalid_date");
     }
@@ -211,11 +180,8 @@ public class CommandLineArgsTest {
             "--path", "logs/2024*",
             "--to", "invalid_date"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        assertThatThrownBy(() -> helloCmd.parse(args))
+
+        assertThatThrownBy(() -> CommandLineArgsParser.getArgs(args))
             .isInstanceOf(ParameterException.class)
             .hasMessage("Invalid ISO8601 local date: invalid_date");
     }
@@ -227,11 +193,7 @@ public class CommandLineArgsTest {
             "--filter-field", "error",
             "--filter-value", "GET"
         };
-        CommandLineArgs jArgs = new CommandLineArgs();
-        JCommander helloCmd = JCommander.newBuilder()
-            .addObject(jArgs)
-            .build();
-        assertThatThrownBy(() -> helloCmd.parse(args))
+        assertThatThrownBy(() -> CommandLineArgsParser.getArgs(args))
             .isInstanceOf(ParameterException.class)
             .hasMessageContaining("--filter-field");
     }
