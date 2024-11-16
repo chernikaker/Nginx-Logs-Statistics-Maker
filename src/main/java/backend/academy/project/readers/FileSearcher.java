@@ -29,7 +29,8 @@ public class FileSearcher {
 
                 PathMatcher matcher = fs.getPathMatcher("glob:" + newGlobPattern);
                 Path relativePath = root.relativize(file);
-                if (matcher.matches(relativePath)) {
+                Path name = relativePath.getFileName();
+                if (matcher.matches(relativePath) || matcher.matches(name)) {
                     logFiles.add(file);
                 }
                 return FileVisitResult.CONTINUE;

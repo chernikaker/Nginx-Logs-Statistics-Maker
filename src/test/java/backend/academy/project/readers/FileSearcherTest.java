@@ -60,7 +60,7 @@ public class FileSearcherTest {
     }
 
     @Test
-    public void allLogsTest() {
+    public void allLogsInFoldersTest() {
         String glob = "**/log*";
         List<Path> logFiles = assertDoesNotThrow(() -> FileSearcher.getLogFiles(glob, rootDir));
         assertEquals(5, logFiles.size());
@@ -69,6 +69,19 @@ public class FileSearcherTest {
         assertTrue(logFiles.contains(rootDir.resolve("manyLogsOneDirectory", "logFile2024-09-21.txt")));
         assertTrue(logFiles.contains(rootDir.resolve("oneLogMultipleDirectories", "dir1", "dir2", "logFile2.txt")));
         assertTrue(logFiles.contains(rootDir.resolve("oneLogOneDirectory", "logFile1.txt")));
+    }
+
+    @Test
+    public void allLogsTest() {
+        String glob = "log*";
+        List<Path> logFiles = assertDoesNotThrow(() -> FileSearcher.getLogFiles(glob, rootDir));
+        assertEquals(6, logFiles.size());
+        assertTrue(logFiles.contains(rootDir.resolve("manyLogsOneDirectory", "logFile3.txt")));
+        assertTrue(logFiles.contains(rootDir.resolve("manyLogsOneDirectory", "logFile4.txt")));
+        assertTrue(logFiles.contains(rootDir.resolve("manyLogsOneDirectory", "logFile2024-09-21.txt")));
+        assertTrue(logFiles.contains(rootDir.resolve("oneLogMultipleDirectories", "dir1", "dir2", "logFile2.txt")));
+        assertTrue(logFiles.contains(rootDir.resolve("oneLogOneDirectory", "logFile1.txt")));
+        assertTrue(logFiles.contains(rootDir.resolve("logFile5.txt")));
     }
 
     @Test

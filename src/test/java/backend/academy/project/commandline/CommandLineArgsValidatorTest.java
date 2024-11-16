@@ -51,7 +51,9 @@ public class CommandLineArgsValidatorTest {
         makeInvalidDatesArgsMock(jArgs);
         assertThatThrownBy(() -> CommandLineArgsValidator.validate(jArgs))
             .isInstanceOf(DateValidationException.class)
-            .hasMessage("Date from " + jArgs.from().get() + " is after date to " + jArgs.to().get());
+            .hasMessage("Date from " + jArgs.from().orElseThrow() + " is after date to " + jArgs.to().orElseThrow(
+
+            ));
     }
 
     @Test

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class CommandLineArgsValidator {
 
     private static final String FILENAME_REGEX = "^[^<>:\"/\\\\|?*]+$";
+
     private CommandLineArgsValidator() {}
 
     public static void validate(CommandLineArgs args)  {
