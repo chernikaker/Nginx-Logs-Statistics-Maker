@@ -38,7 +38,7 @@ public class MarkdownStatisticsWriter extends StatisticsWriter {
         for (String item : data) {
             sb.append(buildCell(item));
         }
-        sb.append(VERT_DELIM + '\n');
+        sb.append(VERT_DELIM).append('\n');
         return sb.toString();
     }
 
@@ -60,7 +60,7 @@ public class MarkdownStatisticsWriter extends StatisticsWriter {
 
     @Override
     protected String buildHeader(String info) {
-        return HEADER_SYMBOL + ' ' + info + '\n';
+        return String.valueOf(HEADER_SYMBOL) + ' ' + info + '\n';
     }
 
 }
