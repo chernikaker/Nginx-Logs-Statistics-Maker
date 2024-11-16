@@ -16,10 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class MarkdownStatisticsWriterTest {
+public class AdocStatisticsWriterTest {
 
     private static final Path TEMP_REPORT_DIR = FileSystems.getDefault().getPath("src", "test", "resources");
     private StatisticsWriter writer;
@@ -34,21 +35,23 @@ public class MarkdownStatisticsWriterTest {
     @BeforeEach
     public void setUp() {
         setUpMocks();
-        writer = new MarkdownStatisticsWriter(mockArgs.filename());
+        writer = new AdocStatisticsWriter(mockArgs.filename());
     }
 
     @Test
-    public void containsMarkdownSymbolsTest() {
+    public void containsAdocSymbolsTest() {
 
         assertDoesNotThrow(() ->  writer.writeResultsToFile(TEMP_REPORT_DIR, mockReport, mockArgs, SOURCES));
-        Path filePath = TEMP_REPORT_DIR.resolve("report.md");
+        Path filePath = TEMP_REPORT_DIR.resolve("report.adoc");
         assertTrue(Files.exists(filePath));
         try {
             String content = Files.readString(filePath);
-            assertTrue(content.contains("#"));
-            assertTrue(content.contains(":---------:"));
+            assertTrue(content.contains("="));
+            assertTrue(content.contains("[cols="));
+            assertTrue(content.contains("]"));
             assertTrue(content.contains("|"));
-            assertTrue(content.contains("##"));
+            assertTrue(content.contains("=="));
+            assertTrue(content.contains("|===="));
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -70,4 +73,5 @@ public class MarkdownStatisticsWriterTest {
         when(mockReport.codeAnswerFrequency()).thenReturn(Map.of(200, 50L, 404, 50L));
         when(mockReport.requestTypeFrequency()).thenReturn(Map.of(RequestType.GET, 50L, RequestType.POST, 50L));
     }
+
 }
