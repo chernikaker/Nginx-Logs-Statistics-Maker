@@ -20,7 +20,7 @@ public class LogRecordParser {
     private static final String LOG_REGEX = "(\\S+) - (\\S+) \\[(.*?)\\] \\\"(.*?)\\\" (\\d{3}) (\\d+) \\\"(.*?)\\\" \\\"(.*?)\\\"";
     private static final String REQUEST_REGEX = "(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) (.+?) (HTTP\\/\\d+\\.\\d+$)";
 
-    public LogRecord parseLog(String logLine) {
+    public static LogRecord parseLog(String logLine) {
         Pattern logPattern = Pattern.compile(LOG_REGEX);
         Matcher logMatcher = logPattern.matcher(logLine);
         if (!logMatcher.matches()) {
@@ -53,7 +53,7 @@ public class LogRecordParser {
             logMatcher.group(8));
     }
 
-    private boolean isValidStardardIp(String ip) {
+    private static boolean isValidStardardIp(String ip) {
         if (!ip.matches(STANDARD_IP_REGEX)) {
             return false;
         }
@@ -67,7 +67,7 @@ public class LogRecordParser {
         return true;
     }
 
-    private boolean isValidIpv6(String ip) {
+    private static boolean isValidIpv6(String ip) {
         if (!ip.matches(IPV6_SYMBOLS_REGEX)) {
             return false;
         }
@@ -88,7 +88,7 @@ public class LogRecordParser {
         return (!emptyParts && ipParts.size() == 8) || (emptyParts && ipParts.size() < 8);
     }
 
-    private LocalDateTime parseDateFromLogFormat(String logDate) {
+    private static LocalDateTime parseDateFromLogFormat(String logDate) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
             OffsetDateTime offsetDateTime = OffsetDateTime.parse(logDate, formatter);

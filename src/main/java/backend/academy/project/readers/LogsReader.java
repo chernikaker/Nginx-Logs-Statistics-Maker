@@ -14,12 +14,11 @@ import org.apache.logging.log4j.Logger;
 public abstract class LogsReader {
 
     protected Logger logger =  LogManager.getLogger();
-    protected final LogRecordParser parser = new LogRecordParser();
     protected final List<String> logSourceNames = new ArrayList<>();
 
     protected final Function<String, LogRecord> tryParseLog = (log -> {
             try {
-                return parser.parseLog(log);
+                return LogRecordParser.parseLog(log);
             } catch (LogParsingException e) {
                 logger.warn("{} Current line skipped", e.getMessage());
                 return null;
