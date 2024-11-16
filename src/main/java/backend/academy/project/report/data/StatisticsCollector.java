@@ -30,7 +30,7 @@ public class StatisticsCollector {
             if (args.from().isPresent() && logRecord.timeLocal().isBefore(args.from().orElseThrow())) {
                 return false;
             }
-            return args.to().isEmpty() || !logRecord.timeLocal().isAfter(args.from().orElseThrow());
+            return args.to().isEmpty() || !logRecord.timeLocal().isAfter(args.to().orElseThrow());
         });
 
         AtomicLong logsCount = new AtomicLong();
