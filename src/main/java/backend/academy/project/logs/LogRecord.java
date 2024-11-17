@@ -1,21 +1,25 @@
 package backend.academy.project.logs;
 
 import backend.academy.project.commandline.FilterFieldType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import java.time.LocalDateTime;
 
-@SuppressWarnings("RecordComponentNumber")
-public record LogRecord(
-     String remoteAddress,
-     String remoteUser,
-     LocalDateTime timeLocal,
-     RequestType requestType,
-     String requestResource,
-     String httpVersion,
-     int status,
-     long bytesSent,
-     String httpReferer,
-     String httpUserAgent
-    ) {
+
+@Getter
+@AllArgsConstructor
+public class LogRecord {
+
+    private String remoteAddress;
+    private String remoteUser;
+    private LocalDateTime timeLocal;
+    private RequestType requestType;
+    private String requestResource;
+    private String httpVersion;
+    private int status;
+    private long bytesSent;
+    private String httpReferer;
+    private String httpUserAgent;
 
     public String getValueByFieldName(FilterFieldType type) {
         return switch (type) {
