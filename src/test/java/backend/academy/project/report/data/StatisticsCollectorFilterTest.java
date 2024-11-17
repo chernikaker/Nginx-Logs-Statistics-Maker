@@ -106,7 +106,7 @@ public class StatisticsCollectorFilterTest {
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord);
         assertThatThrownBy(() -> StatisticsCollector.calculateLogStatistics(logRecords, mockArgs))
             .isInstanceOf(LogsNotFoundException.class)
-            .hasMessage("No logs found after filtering");
+            .hasMessage("No logs found matching user parameters");
     }
 
 
