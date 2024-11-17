@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 public abstract class LogsReader {
 
     // логгер для информации о пропуске файлов или строк при чтении
@@ -38,5 +37,4 @@ public abstract class LogsReader {
     public List<String> getLogSourceNames() {
         return Collections.unmodifiableList(logSourceNames);
     }
-
 }

@@ -28,7 +28,6 @@ public class UrlLogsReader extends LogsReader {
                 .header("User-Agent", USER_AGENT)
                 .GET()
                 .build();
-
             Stream<LogRecord> logs = httpClient
                 .send(request, HttpResponse.BodyHandlers.ofString())
                 .body()

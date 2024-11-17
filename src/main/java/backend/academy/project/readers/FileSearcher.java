@@ -29,7 +29,6 @@ public class FileSearcher {
     private FileSearcher() {}
 
     public static List<Path> getLogFiles(String globPattern, Path root) {
-
         List<Path> logFiles = new ArrayList<>();
         // если glob содержит только имя файла без директорий (например *.txt, log*),
         // на соответствие проверяются найденные файлы из всех директорий

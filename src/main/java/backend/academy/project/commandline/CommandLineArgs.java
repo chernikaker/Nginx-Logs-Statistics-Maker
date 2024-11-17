@@ -10,27 +10,27 @@ import lombok.Getter;
 public class CommandLineArgs {
 
     @Parameter(
-        names  =  {"--path", "--P"},
-        description  =  "Path to log file(s)",
+        names = {"--path", "--P"},
+        description = "Path to log file(s) or URL",
         required = true
     )
     private String pathToLogs;
 
     @Parameter(
-        names  =  {"--format"},
-        description  =  "Format of output"
+        names = {"--format"},
+        description = "Format of output"
     )
     private OutputFileType type = OutputFileType.MARKDOWN;
 
     @Parameter(
-        names  =  {"--from"},
+        names = {"--from"},
         description = "Lower bound of logs time",
         converter = ISO8601DateTimeConverter.class
     )
     private Optional<LocalDateTime> from = Optional.empty();
 
     @Parameter(
-        names  =  {"--to"},
+        names = {"--to"},
         description = "Upper bound of logs time",
         converter = ISO8601DateTimeConverter.class
     )

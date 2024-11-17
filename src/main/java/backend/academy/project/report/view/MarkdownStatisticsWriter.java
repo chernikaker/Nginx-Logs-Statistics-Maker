@@ -62,5 +62,4 @@ public class MarkdownStatisticsWriter extends StatisticsWriter {
     protected String buildHeader(String info) {
         return String.valueOf(HEADER_SYMBOL) + ' ' + info + '\n';
     }
-
 }

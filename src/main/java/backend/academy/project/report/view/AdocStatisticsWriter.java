@@ -2,7 +2,6 @@ package backend.academy.project.report.view;
 
 import java.util.List;
 
-
 public class AdocStatisticsWriter extends StatisticsWriter {
 
     private static final String TABLE_BORDER = "|====";
