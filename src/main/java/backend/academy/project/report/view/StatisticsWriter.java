@@ -18,6 +18,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import static backend.academy.project.report.data.AnswerCodeCollection.getAnswerInfoByCode;
 
+/**
+ * Класс, формирующий текстовый отчет из данных и записывающий его в файл
+ */
 public abstract class StatisticsWriter {
 
     protected static final int TOP_RESULTS = 5;
@@ -37,8 +40,7 @@ public abstract class StatisticsWriter {
         LogInfoReport report,
         CommandLineArgs args,
         List<String> resources
-    )
-        throws FileAlreadyExistsException {
+    ) throws FileAlreadyExistsException {
         String reportText = makeReportText(report, args, resources);
         if (Files.isRegularFile(directoryPath)) {
             throw new PathIsNotDirectoryException("Path is a regular file, not directory: " + directoryPath);
@@ -57,10 +59,15 @@ public abstract class StatisticsWriter {
     protected String makeReportText(LogInfoReport report, CommandLineArgs args,  List<String> sources) {
         StringBuilder sb = new StringBuilder();
         sb.append(buildHeader("Logs statistics report"));
+        // таблица используемых ресурсов с логами
         sb.append(makeSourceTable(sources));
+        // таблица с общими статистиками
         sb.append(makeCommonInfoTable(report, args));
+        // таблица наиболее популярных запрашиваемых ресурсов
         sb.append(makeResourcesTable(report));
+        // таблица наиболее популярных кодов ответа с описанием
         sb.append(makeAnswerCodeTable(report));
+        // таблица наиболее популярных типов запросов
         sb.append(makeRequestTypeFrequencyTable(report));
         return sb.toString();
     }
@@ -69,15 +76,21 @@ public abstract class StatisticsWriter {
         StringBuilder sb = new StringBuilder();
         sb.append(buildTableStart("Common info", TWO_COLUMNS));
         sb.append(buildTableHeader(List.of("Metric", "Value")));
+        // далее параметры введенные пользователем
+        // дата from
         String fromDateView =  args.from().isPresent() ? args.from().orElseThrow().format(formatter) : "-";
         sb.append(buildRow(List.of("Date from", fromDateView)));
+        // дата to
         String toDateView = args.to().isPresent() ? args.to().orElseThrow().format(formatter) : "-";
         sb.append(buildRow(List.of("Date to", toDateView)));
-        String filterView =  args.filterField() == FilterFieldType.NONE
+        // фильтр по полю (поле + значение)
+        String filterView =
+            args.filterField() == FilterFieldType.NONE
             ? "-"
             : args.filterField() + " = " + args.filterValue();
         sb.append(buildRow(List.of("Filter", filterView)));
         String logCountView = String.valueOf(report.logsCount());
+        // далее общие статистики
         sb.append(buildRow(List.of("Logs amount", logCountView)));
         String ipCountView = String.valueOf(report.logsCount());
         sb.append(buildRow(List.of("Unique IP amount", ipCountView)));
