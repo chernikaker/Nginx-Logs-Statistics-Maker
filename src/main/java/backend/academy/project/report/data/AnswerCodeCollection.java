@@ -11,9 +11,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * Класс-контейнер для информации о кодах возвращаемого HTTP ответа
+ * и соответствующих им названиях<br><br>
+ * При инициализации класса информация считывается из JSON
+ */
 public class AnswerCodeCollection {
-
-    private AnswerCodeCollection() {}
 
     private static final Map<Integer, String> CODE_NAMES = new HashMap<>();
     private static final String JSON_CODE_FILE = "/http_status_codes.json";
@@ -29,6 +32,8 @@ public class AnswerCodeCollection {
             throw new CodesInfoNotFoundException("Can't process codes file", e);
         }
     }
+
+    private AnswerCodeCollection() {}
 
     public static String getAnswerInfoByCode(int code) {
         String answer = CODE_NAMES.get(code);

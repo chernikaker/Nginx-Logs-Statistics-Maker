@@ -11,8 +11,10 @@ public class LogInfoReport {
     private long logsCount;
     private Map<String, Long> resourceFrequency;
     private Map<Integer, Long> codeAnswerFrequency;
-    private Map<RequestType, Long> requestTypeFrequency;
     private double avgAnswerSize;
     private double percentile95AnswerSize;
+    // дополнительная статистика - количество уникальных IP
     private long uniqueIPCount;
+    // дополнительная статистика - частота типов запросов
+    private Map<RequestType, Long> requestTypeFrequency;
 }
