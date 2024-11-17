@@ -32,7 +32,7 @@ public class CommandLineArgsTest {
         assertTrue(jArgs.to().isPresent());
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
         assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
         assertEquals("report", jArgs.filename());
         assertEquals(FilterFieldType.STATUS, jArgs.filterField());
         assertEquals("GET", jArgs.filterValue());
@@ -54,7 +54,7 @@ public class CommandLineArgsTest {
         assertTrue(jArgs.to().isPresent());
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
         assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
-        assertEquals(OuputFileType.MARKDOWN, jArgs.type());
+        assertEquals(OutputFileType.MARKDOWN, jArgs.type());
         assertEquals("report", jArgs.filename());
         assertEquals(FilterFieldType.STATUS, jArgs.filterField());
         assertEquals("GET", jArgs.filterValue());
@@ -75,7 +75,7 @@ public class CommandLineArgsTest {
         assertFalse(jArgs.from().isPresent());
         assertTrue(jArgs.to().isPresent());
         assertEquals(LocalDateTime.of(2024,2,1,0,0,0), jArgs.to().orElseThrow());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
         assertEquals("report", jArgs.filename());
         assertEquals(FilterFieldType.STATUS, jArgs.filterField());
         assertEquals("GET", jArgs.filterValue());
@@ -95,8 +95,8 @@ public class CommandLineArgsTest {
         assertFalse(jArgs.to().isPresent());
         assertTrue(jArgs.from().isPresent());
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
         assertEquals("statistics_report", jArgs.filename());
         assertEquals(FilterFieldType.STATUS, jArgs.filterField());
         assertEquals("GET", jArgs.filterValue());
@@ -117,8 +117,8 @@ public class CommandLineArgsTest {
         assertFalse(jArgs.to().isPresent());
         assertTrue(jArgs.from().isPresent());
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
         assertEquals(FilterFieldType.STATUS, jArgs.filterField());
         assertEquals("GET", jArgs.filterValue());
     }
@@ -136,8 +136,8 @@ public class CommandLineArgsTest {
         assertFalse(jArgs.to().isPresent());
         assertTrue(jArgs.from().isPresent());
         assertEquals(LocalDateTime.of(2024,1,1,0,0,0), jArgs.from().orElseThrow());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
-        assertEquals(OuputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
+        assertEquals(OutputFileType.ADOC, jArgs.type());
         assertEquals("report", jArgs.filename());
         assertEquals(FilterFieldType.NONE, jArgs.filterField());
         assertEquals("", jArgs.filterValue());

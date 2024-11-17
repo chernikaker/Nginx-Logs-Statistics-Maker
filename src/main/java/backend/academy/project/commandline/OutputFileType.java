@@ -1,6 +1,6 @@
 package backend.academy.project.commandline;
 
-public enum OuputFileType {
+public enum OutputFileType {
     MARKDOWN,
     ADOC
 }

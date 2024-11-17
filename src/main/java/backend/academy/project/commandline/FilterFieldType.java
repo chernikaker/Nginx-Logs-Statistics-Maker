@@ -1,6 +1,5 @@
 package backend.academy.project.commandline;
 
-
 public enum FilterFieldType {
     REMOTE_ADDRESS,
     REMOTE_USER,

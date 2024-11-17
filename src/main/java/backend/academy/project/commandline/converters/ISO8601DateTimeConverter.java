@@ -8,6 +8,17 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
+/**
+ *  Класс-конвертер строкового представления времени в формате ISO8601 в объект
+ *  LocalDateTime.
+ *  Поддерживает форматы:<br>
+ *  <ul>
+ *      <li>'YYYY-MM-ddThh:mm:ss'</li>
+ *      <li>'YYYY-MM-dd'</li>
+ *  </ul>
+ *  В случае парсинга даты без времени устанавливает время на начало дня.
+ * @see LocalDateTime
+ */
 public class ISO8601DateTimeConverter implements IStringConverter<Optional<LocalDateTime>> {
 
     @Override
