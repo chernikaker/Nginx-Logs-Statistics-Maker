@@ -12,13 +12,13 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("LineLength")
+@SuppressWarnings("MagicNumber")
 public class LogRecordParser {
 
     private static final String STANDARD_IP_REGEX = "((?:\\d{1,3}\\.){3}\\d{1,3})";
     private static final String IPV6_SYMBOLS_REGEX = "^[0-9a-fA-F:]+$";
-    private static final String LOG_REGEX = "(\\S+) - (\\S+) \\[(.*?)\\] \\\"(.*?)\\\" (\\d{3}) (\\d+) \\\"(.*?)\\\" \\\"(.*?)\\\"";
-    private static final String REQUEST_REGEX = "(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) (.+?) (HTTP\\/\\d+\\.\\d+$)";
+    private static final String LOG_REGEX = "(\\S+) - (\\S+) \\[(.*?)] \"(.*?)\" (\\d{3}) (\\d+) \"(.*?)\" \"(.*?)\"";
+    private static final String REQUEST_REGEX = "(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) (.+?) (HTTP/\\d+\\.\\d+$)";
 
     private static final int MAX_IP_BLOCK_VALUE = 255;
     private static final int IPV6_PARTS = 8;
