@@ -16,9 +16,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Главный класс приложения, связывающий между собой все компоненты
+ */
 public class LogStatisticsApp {
 
+    // путь для сохранения отчета
     private static final Path REPORT_PATH = Paths.get("").toAbsolutePath();
+    // поток вывода для информации о результате выполнения приложения
     private final PrintStream out;
 
     public LogStatisticsApp(PrintStream out) {
@@ -37,16 +42,14 @@ public class LogStatisticsApp {
             Stream<LogRecord> lines = reader.readLogLines();
             List<String> processedResources = reader.getLogSourceNames();
             if (processedResources.isEmpty()) {
-                return "No files found. Check --path value";
+                return "No files containing valid logs found. Check --path value";
             }
             LogInfoReport report = StatisticsCollector.calculateLogStatistics(lines, arguments);
-            SimpleWriterFactory writerFactory = new SimpleWriterFactory();
-            StatisticsWriter viewer = writerFactory.createWriter(arguments.type(), arguments.filename());
+            StatisticsWriter viewer = SimpleWriterFactory.createWriter(arguments.type(), arguments.filename());
             viewer.writeResultsToFile(REPORT_PATH, report, arguments, processedResources);
             return "Report is written successfully to directory " + REPORT_PATH;
         } catch (Exception e) {
-            return "Error occured: " + e.getMessage();
+            return "Error occurred: " + e.getMessage();
         }
     }
-
 }
