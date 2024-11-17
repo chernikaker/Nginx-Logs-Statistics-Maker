@@ -2,8 +2,8 @@ package backend.academy.project.commandline;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
-import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

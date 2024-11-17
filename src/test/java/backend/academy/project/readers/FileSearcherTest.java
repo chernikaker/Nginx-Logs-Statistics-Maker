@@ -1,14 +1,14 @@
 package backend.academy.project.readers;
 
 import backend.academy.project.readers.exception.FindingFilesException;
-import org.junit.jupiter.api.Test;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class FileSearcherTest {
 

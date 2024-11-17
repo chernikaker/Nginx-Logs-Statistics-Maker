@@ -4,33 +4,24 @@ import backend.academy.project.commandline.CommandLineArgs;
 import backend.academy.project.commandline.FilterFieldType;
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.logs.RequestType;
-
 import backend.academy.project.report.data.exception.LogsNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.Stream;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 public class StatisticsCollectorFilterTest {
 
-    @Mock
-    private CommandLineArgs mockArgs = Mockito.mock(CommandLineArgs.class);
-    @Mock
-    private LogRecord mockLogRecord = Mockito.mock(LogRecord.class);
-    @Mock
-    private LogRecord mockLogRecordToFilter = Mockito.mock(LogRecord.class);
-
     private static final LocalDateTime MOCK_DATE_TIME = LocalDateTime.of(2024,4,14,0,0,0);
-
+    private final CommandLineArgs mockArgs = Mockito.mock(CommandLineArgs.class);
+    private final LogRecord mockLogRecord = Mockito.mock(LogRecord.class);
+    private final LogRecord mockLogRecordToFilter = Mockito.mock(LogRecord.class);
 
     @BeforeEach
     void setUp() {
@@ -41,7 +32,6 @@ public class StatisticsCollectorFilterTest {
 
     @Test
     public void noFilteringLogsTest() {
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord, mockLogRecordToFilter);
         LogInfoReport report = assertDoesNotThrow(() -> StatisticsCollector.calculateLogStatistics(logRecords, mockArgs));
         assertEquals(2, report.logsCount());
@@ -49,10 +39,8 @@ public class StatisticsCollectorFilterTest {
 
     @Test
     public void filterLogsByDateFromTest() {
-
         when(mockLogRecordToFilter.timeLocal()).thenReturn(MOCK_DATE_TIME.minusDays(2));
         when(mockArgs.from()).thenReturn(Optional.of(MOCK_DATE_TIME.minusDays(1)));
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord, mockLogRecordToFilter);
         LogInfoReport report = assertDoesNotThrow(() -> StatisticsCollector.calculateLogStatistics(logRecords, mockArgs));
         assertEquals(1, report.logsCount());
@@ -60,10 +48,8 @@ public class StatisticsCollectorFilterTest {
 
     @Test
     public void filterLogsByDateToTest() {
-
         when(mockLogRecordToFilter.timeLocal()).thenReturn(MOCK_DATE_TIME.plusDays(2));
         when(mockArgs.to()).thenReturn(Optional.of(MOCK_DATE_TIME.plusDays(1)));
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord, mockLogRecordToFilter);
         LogInfoReport report = assertDoesNotThrow(() -> StatisticsCollector.calculateLogStatistics(logRecords, mockArgs));
         assertEquals(1, report.logsCount());
@@ -71,12 +57,10 @@ public class StatisticsCollectorFilterTest {
 
     @Test
     public void filterLogsByRequestFieldTest() {
-
         when(mockLogRecord.getValueByFieldName(FilterFieldType.REQUEST_TYPE)).thenReturn("GET");
         when(mockLogRecordToFilter.getValueByFieldName(FilterFieldType.REQUEST_TYPE)).thenReturn("PUT");
         when(mockArgs.filterField()).thenReturn(FilterFieldType.REQUEST_TYPE);
         when(mockArgs.filterValue()).thenReturn("GET");
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord, mockLogRecordToFilter);
         LogInfoReport report = assertDoesNotThrow(() -> StatisticsCollector.calculateLogStatistics(logRecords, mockArgs));
         assertEquals(1, report.logsCount());
@@ -86,12 +70,10 @@ public class StatisticsCollectorFilterTest {
 
     @Test
     public void filterLogsByHTTPVersionRegexTest() {
-
         when(mockLogRecord.getValueByFieldName(FilterFieldType.HTTP_VERSION)).thenReturn("HTTP/1.1");
         when(mockLogRecordToFilter.getValueByFieldName(FilterFieldType.HTTP_VERSION)).thenReturn("HTTP/2.1");
         when(mockArgs.filterField()).thenReturn(FilterFieldType.HTTP_VERSION);
         when(mockArgs.filterValue()).thenReturn("HTTP\\/1\\..*");
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord, mockLogRecordToFilter);
         LogInfoReport report = assertDoesNotThrow(() -> StatisticsCollector.calculateLogStatistics(logRecords, mockArgs));
         assertEquals(1, report.logsCount());
@@ -99,16 +81,13 @@ public class StatisticsCollectorFilterTest {
 
     @Test
     public void noLogsAfterFilterRemained() {
-
         when(mockArgs.from()).thenReturn(Optional.of(MOCK_DATE_TIME.minusDays(1)));
         when(mockArgs.to()).thenReturn(Optional.of(MOCK_DATE_TIME.minusDays(1)));
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord);
         assertThatThrownBy(() -> StatisticsCollector.calculateLogStatistics(logRecords, mockArgs))
             .isInstanceOf(LogsNotFoundException.class)
             .hasMessage("No logs found matching user parameters");
     }
-
 
     private static void makeDefaultLogRecord(LogRecord mockLogRecord) {
         when(mockLogRecord.remoteAddress()).thenReturn("127.0.0.1");

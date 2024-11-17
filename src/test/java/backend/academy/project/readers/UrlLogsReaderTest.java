@@ -2,16 +2,13 @@ package backend.academy.project.readers;
 
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.readers.exception.ReadingFromUrlException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,13 +19,12 @@ import static org.mockito.Mockito.when;
 
 public class UrlLogsReaderTest {
 
+    private static final String VALID_LOG = "0.61.164.147 - - [13/Nov/2024:12:59:53 +0000] \"GET /moderator.jpg HTTP/1.1\" 200 2065 \"-\" \"Mozilla/5.0 (X11; Linux x86_64; rv:8.0) Gecko/1963-24-10 Firefox/37.0\"";
+    private static final String INVALID_LOG = "Invalid info";
     private static final String MOCK_URL = "http://example.com/logs";
     private  UrlLogsReader reader;
     private final HttpClient mockHttpClient = mock(HttpClient.class);
     private final HttpResponse<String> mockHttpResponse = mock(HttpResponse.class);
-    private static final String VALID_LOG =
-        "0.61.164.147 - - [13/Nov/2024:12:59:53 +0000] \"GET /moderator.jpg HTTP/1.1\" 200 2065 \"-\" \"Mozilla/5.0 (X11; Linux x86_64; rv:8.0) Gecko/1963-24-10 Firefox/37.0\"";
-    private static final String INVALID_LOG = "Invalid info";
 
 
     @Test

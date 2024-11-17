@@ -4,27 +4,22 @@ import backend.academy.project.commandline.CommandLineArgs;
 import backend.academy.project.commandline.FilterFieldType;
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.logs.RequestType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class StatisticsCollectorTest {
 
-    @Mock
-    private CommandLineArgs mockArgs = Mockito.mock(CommandLineArgs.class);
-    @Mock
-    private LogRecord mockLogRecord = Mockito.mock(LogRecord.class);
-
     private static final LocalDateTime MOCK_DATE_TIME = LocalDateTime.of(2024,4,14,0,0,0);
     private static final double DELTA = 0.01;
-
+    private final CommandLineArgs mockArgs = Mockito.mock(CommandLineArgs.class);
+    private final LogRecord mockLogRecord = Mockito.mock(LogRecord.class);
 
     @BeforeEach
     void setUp() {
@@ -34,7 +29,6 @@ public class StatisticsCollectorTest {
 
     @Test
     public void oneLogInStreamTest() {
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord);
         LogInfoReport report = StatisticsCollector.calculateLogStatistics(logRecords, mockArgs);
         assertEquals(1, report.logsCount());
@@ -57,7 +51,6 @@ public class StatisticsCollectorTest {
 
     @Test
     public void twoSameLogsInStreamTest() {
-
         Stream<LogRecord> logRecords = Stream.of(mockLogRecord, mockLogRecord);
         LogInfoReport report = StatisticsCollector.calculateLogStatistics(logRecords, mockArgs);
         assertEquals(2, report.logsCount());
@@ -77,7 +70,6 @@ public class StatisticsCollectorTest {
         assertTrue(report.resourceFrequency().containsKey("resource"));
         assertEquals(2, report.resourceFrequency().get("resource"));
     }
-    
 
     private static void makeDefaultLogRecord(LogRecord mockLogRecord) {
         when(mockLogRecord.remoteAddress()).thenReturn("127.0.0.1");

@@ -4,12 +4,12 @@ import backend.academy.project.commandline.exception.DateValidationException;
 import backend.academy.project.commandline.exception.EmptyPathValidationException;
 import backend.academy.project.commandline.exception.FileNamingException;
 import backend.academy.project.commandline.exception.FilterValidationException;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class CommandLineArgsValidatorTest {
 
@@ -52,9 +52,7 @@ public class CommandLineArgsValidatorTest {
         makeInvalidDatesArgsMock(jArgs);
         assertThatThrownBy(() -> CommandLineArgsValidator.validate(jArgs))
             .isInstanceOf(DateValidationException.class)
-            .hasMessage("Date from " + jArgs.from().orElseThrow() + " is after date to " + jArgs.to().orElseThrow(
-
-            ));
+            .hasMessage("Date from " + jArgs.from().orElseThrow() + " is after date to " + jArgs.to().orElseThrow());
     }
 
     @Test
@@ -96,7 +94,6 @@ public class CommandLineArgsValidatorTest {
             .isInstanceOf(EmptyPathValidationException.class)
             .hasMessage("Path is empty");
     }
-
 
     private static void makeDefaultArgsMock(CommandLineArgs jArgs){
         Mockito.when(jArgs.pathToLogs()).thenReturn("logs*");

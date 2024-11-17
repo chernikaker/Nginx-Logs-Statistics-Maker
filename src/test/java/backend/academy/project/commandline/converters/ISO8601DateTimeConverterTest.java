@@ -1,10 +1,10 @@
 package backend.academy.project.commandline.converters;
 
 import com.beust.jcommander.ParameterException;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,5 +38,5 @@ public class ISO8601DateTimeConverterTest {
         assertThatThrownBy(() -> converter.convert(sampleDateTime))
             .isInstanceOf(ParameterException.class)
             .hasMessageContaining("Invalid ISO8601 local date: " + sampleDateTime);
-          }
+    }
 }

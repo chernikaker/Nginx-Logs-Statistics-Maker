@@ -21,15 +21,11 @@ import static org.mockito.Mockito.when;
 
 public class MarkdownStatisticsWriterTest {
 
+    private static final List<String> SOURCES = List.of("source.txt");
     private static final Path TEMP_REPORT_DIR = FileSystems.getDefault().getPath("src", "test", "resources");
     private StatisticsWriter writer;
-    private static final List<String> SOURCES = List.of("source.txt");
-
-    @Mock
-    private CommandLineArgs mockArgs = Mockito.mock(CommandLineArgs.class);
-
-    @Mock
-    private LogInfoReport mockReport = Mockito.mock(LogInfoReport.class);
+    private final CommandLineArgs mockArgs = Mockito.mock(CommandLineArgs.class);
+    private final LogInfoReport mockReport = Mockito.mock(LogInfoReport.class);
 
     @BeforeEach
     public void setUp() {
@@ -39,7 +35,6 @@ public class MarkdownStatisticsWriterTest {
 
     @Test
     public void containsMarkdownSymbolsTest() {
-
         assertDoesNotThrow(() ->  writer.writeResultsToFile(TEMP_REPORT_DIR, mockReport, mockArgs, SOURCES));
         Path filePath = TEMP_REPORT_DIR.resolve("report.md");
         assertTrue(Files.exists(filePath));
@@ -54,7 +49,6 @@ public class MarkdownStatisticsWriterTest {
             throw new RuntimeException(e);
         }
     }
-
 
     private void setUpMocks(){
         when(mockArgs.from()).thenReturn(Optional.empty());
