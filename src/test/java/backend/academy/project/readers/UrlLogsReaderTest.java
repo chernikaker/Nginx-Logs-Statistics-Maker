@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 public class UrlLogsReaderTest {
 
     private static final String MOCK_URL = "http://example.com/logs";
@@ -28,7 +29,7 @@ public class UrlLogsReaderTest {
     private static final String VALID_LOG =
         "0.61.164.147 - - [13/Nov/2024:12:59:53 +0000] \"GET /moderator.jpg HTTP/1.1\" 200 2065 \"-\" \"Mozilla/5.0 (X11; Linux x86_64; rv:8.0) Gecko/1963-24-10 Firefox/37.0\"";
     private static final String INVALID_LOG = "Invalid info";
-    
+
 
     @Test
     public void pathAndAndLogsAreCorrectTest() {

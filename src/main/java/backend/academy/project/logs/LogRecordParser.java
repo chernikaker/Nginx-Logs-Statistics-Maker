@@ -20,6 +20,8 @@ public class LogRecordParser {
     private static final String LOG_REGEX = "(\\S+) - (\\S+) \\[(.*?)\\] \\\"(.*?)\\\" (\\d{3}) (\\d+) \\\"(.*?)\\\" \\\"(.*?)\\\"";
     private static final String REQUEST_REGEX = "(GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) (.+?) (HTTP\\/\\d+\\.\\d+$)";
 
+    private LogRecordParser() {}
+
     public static LogRecord parseLog(String logLine) {
         Pattern logPattern = Pattern.compile(LOG_REGEX);
         Matcher logMatcher = logPattern.matcher(logLine);

@@ -2,7 +2,6 @@ package backend.academy.project.readers;
 
 import backend.academy.project.logs.LogRecord;
 import backend.academy.project.readers.exception.ReadingFromUrlException;
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,7 +12,7 @@ import static com.google.common.net.HttpHeaders.USER_AGENT;
 
 public class UrlLogsReader extends LogsReader {
 
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String path;
 
     public UrlLogsReader(String path) {
@@ -29,7 +28,7 @@ public class UrlLogsReader extends LogsReader {
             .GET()
             .build();
 
-            Stream<LogRecord> logs = HTTP_CLIENT
+            Stream<LogRecord> logs = httpClient
                 .send(request, HttpResponse.BodyHandlers.ofString())
                 .body()
                 .lines()
