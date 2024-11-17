@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class LocalFileLogsReader extends LogsReader {
 
     // по умолчанию корневой директорией поиска является текущая директория
-    private final Path DEFAULT_ROOT_PATH = Paths.get("").toAbsolutePath();
+    private static final Path DEFAULT_ROOT_PATH = Paths.get("").toAbsolutePath();
     private final Path rootPath;
     private final String globPath;
 
@@ -23,7 +23,7 @@ public class LocalFileLogsReader extends LogsReader {
     }
 
     public LocalFileLogsReader(String globPath) {
-        this(globPath, Paths.get("").toAbsolutePath());
+        this(globPath, DEFAULT_ROOT_PATH);
     }
 
     @Override
