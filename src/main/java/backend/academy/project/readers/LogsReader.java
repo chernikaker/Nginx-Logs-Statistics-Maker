@@ -6,6 +6,7 @@ import backend.academy.project.logs.exception.LogParsingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
@@ -17,15 +18,11 @@ public abstract class LogsReader {
     protected Logger logger =  LogManager.getLogger();
     // имена файлов/URL, из которых производилось считывание
     protected final List<String> logSourceNames = new ArrayList<>();
-    // количество успешно обработанных логов для каждого файла
-    protected int logLinesProcessedPerFile = 0;
     // функция преобразования строки в объект LogRecord
     // в случае невалидной строки пропускает ее, оставляя возможность обработать остальной поток
     protected final Function<String, LogRecord> tryParseLog = (log -> {
             try {
-                LogRecord record = LogRecordParser.parseLog(log);
-                logLinesProcessedPerFile++;
-                return record;
+                return LogRecordParser.parseLog(log);
             } catch (LogParsingException e) {
                 logger.warn("{} Current line skipped", e.getMessage());
                 return null;

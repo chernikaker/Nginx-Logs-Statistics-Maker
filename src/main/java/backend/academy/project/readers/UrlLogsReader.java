@@ -35,9 +35,7 @@ public class UrlLogsReader extends LogsReader {
                 .map(tryParseLog)
                 .filter(Objects::nonNull);
             // в случае успешной обработки строк ответа в логи добавляем его в информацию
-            if (logLinesProcessedPerFile > 0) {
-                logSourceNames.add(path);
-            }
+            logSourceNames.add(path);
             return logs;
         } catch (Exception e) {
             throw new ReadingFromUrlException("Error while reading log lines from " + path, e);

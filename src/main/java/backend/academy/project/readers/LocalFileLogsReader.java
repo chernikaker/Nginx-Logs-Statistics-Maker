@@ -6,14 +6,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class LocalFileLogsReader extends LogsReader {
 
     // по умолчанию корневой директорией поиска является текущая директория
-    private static final Path DEFAULT_ROOT_PATH = Paths.get("").toAbsolutePath();
+    private final Path DEFAULT_ROOT_PATH = Paths.get("").toAbsolutePath();
     private final Path rootPath;
     private final String globPath;
+
 
     public LocalFileLogsReader(String globPath, Path rootPath) {
         this.globPath = globPath;
@@ -21,7 +23,7 @@ public class LocalFileLogsReader extends LogsReader {
     }
 
     public LocalFileLogsReader(String globPath) {
-        this(globPath, DEFAULT_ROOT_PATH);
+        this(globPath, Paths.get("").toAbsolutePath());
     }
 
     @Override
@@ -30,7 +32,6 @@ public class LocalFileLogsReader extends LogsReader {
         List<Path> logFiles = FileSearcher.getLogFiles(globPath, rootPath);
         Stream<LogRecord> logRecordStream = Stream.empty();
         for (Path logFile : logFiles) {
-            logLinesProcessedPerFile = 0;
             try {
                 Path fileName = logFile.getFileName();
                 if (fileName == null) {
@@ -41,10 +42,8 @@ public class LocalFileLogsReader extends LogsReader {
                     .map(tryParseLog)
                     .filter(Objects::nonNull);
                 // в случае успешной обработки строк файла в логи добавляем его в информацию
-                if (logLinesProcessedPerFile > 0) {
-                    logRecordStream = Stream.concat(logRecordStream, logs);
-                    logSourceNames.add(fileName.toString());
-                }
+                logRecordStream = Stream.concat(logRecordStream, logs);
+                logSourceNames.add(fileName.toString());
             } catch (Exception e) {
                 // в случае ошибки при работе с файлом пропускаем его, давая возможность обработать остальные
                 logger.warn("Can't process file {}. Current file skipped", logFile, e);
