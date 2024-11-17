@@ -11,14 +11,22 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 public abstract class LogsReader {
 
+    // логгер для информации о пропуске файлов или строк при чтении
     protected Logger logger =  LogManager.getLogger();
+    // имена файлов/URL, из которых производилось считывание
     protected final List<String> logSourceNames = new ArrayList<>();
-
+    // количество успешно обработанных логов для каждого файла
+    protected int logLinesProcessedPerFile = 0;
+    // функция преобразования строки в объект LogRecord
+    // в случае невалидной строки пропускает ее, оставляя возможность обработать остальной поток
     protected final Function<String, LogRecord> tryParseLog = (log -> {
             try {
-                return LogRecordParser.parseLog(log);
+                LogRecord record = LogRecordParser.parseLog(log);
+                logLinesProcessedPerFile++;
+                return record;
             } catch (LogParsingException e) {
                 logger.warn("{} Current line skipped", e.getMessage());
                 return null;

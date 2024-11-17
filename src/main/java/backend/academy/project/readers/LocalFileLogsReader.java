@@ -10,9 +10,10 @@ import java.util.stream.Stream;
 
 public class LocalFileLogsReader extends LogsReader {
 
+    // по умолчанию корневой директорией поиска является текущая директория
+    private static final Path DEFAULT_ROOT_PATH = Paths.get("").toAbsolutePath();
     private final Path rootPath;
     private final String globPath;
-
 
     public LocalFileLogsReader(String globPath, Path rootPath) {
         this.globPath = globPath;
@@ -20,15 +21,16 @@ public class LocalFileLogsReader extends LogsReader {
     }
 
     public LocalFileLogsReader(String globPath) {
-        this(globPath, Paths.get("").toAbsolutePath());
+        this(globPath, DEFAULT_ROOT_PATH);
     }
 
     @Override
     public Stream<LogRecord> readLogLines() {
-
+        logSourceNames.clear();
         List<Path> logFiles = FileSearcher.getLogFiles(globPath, rootPath);
         Stream<LogRecord> logRecordStream = Stream.empty();
         for (Path logFile : logFiles) {
+            logLinesProcessedPerFile = 0;
             try {
                 Path fileName = logFile.getFileName();
                 if (fileName == null) {
@@ -38,10 +40,13 @@ public class LocalFileLogsReader extends LogsReader {
                     .lines(logFile)
                     .map(tryParseLog)
                     .filter(Objects::nonNull);
-                logRecordStream = Stream.concat(logRecordStream, logs);
-                logSourceNames.add(fileName.toString());
-
+                // в случае успешной обработки строк файла в логи добавляем его в информацию
+                if (logLinesProcessedPerFile > 0) {
+                    logRecordStream = Stream.concat(logRecordStream, logs);
+                    logSourceNames.add(fileName.toString());
+                }
             } catch (Exception e) {
+                // в случае ошибки при работе с файлом пропускаем его, давая возможность обработать остальные
                 logger.warn("Can't process file {}. Current file skipped", logFile, e);
             }
         }

@@ -12,6 +12,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *  Утилитарный класс, отвечающий за парсинг лога из строки на основе регулярных выражений
+ */
 @SuppressWarnings("MagicNumber")
 public class LogRecordParser {
 
@@ -39,7 +42,6 @@ public class LogRecordParser {
         if (!isValidStandardIp(remoteIp) && !isValidIpv6(remoteIp)) {
             throw new LogParsingException("Ip address has invalid format: " + remoteIp);
         }
-        String remoteUser = logMatcher.group(2);
         // парсинг локального времени из строки
         String localDate = logMatcher.group(3);
         LocalDateTime dateTime = parseDateFromLogFormat(localDate);
@@ -50,6 +52,7 @@ public class LogRecordParser {
         if (!requestMatcher.matches()) {
             throw new LogParsingException("Can't parse request: " + request);
         }
+        String remoteUser = logMatcher.group(2);
         RequestType requestType = RequestType.valueOf(requestMatcher.group(1));
         String resource = requestMatcher.group(2);
         String httpVersion = requestMatcher.group(3);

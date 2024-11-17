@@ -85,6 +85,23 @@ public class LocalFileLogsReaderTest {
     }
 
     @Test
+    public void EmptyStreamAfterProcessingFileTest() {
+        try (MockedStatic<FileSearcher> mockedFileStatic = Mockito.mockStatic(FileSearcher.class);
+             MockedStatic<Files> mockedStatic = Mockito.mockStatic(Files.class)) {
+            mockedFileStatic.when(() -> FileSearcher.getLogFiles(anyString(), any(Path.class)))
+                .thenReturn(List.of(mockLogFile));
+
+            Stream<String> lines = Stream.of(INVALID_LOG);
+            mockedStatic.when(() -> Files.lines(mockLogFile)).thenReturn(lines);
+
+            List<LogRecord> result = assertDoesNotThrow(() -> reader.readLogLines().toList());
+            assertEquals(0, result.size());
+            List<String> fileNames = reader.getLogSourceNames();
+            assertEquals(0, fileNames.size());
+        }
+    }
+
+    @Test
     public void ErrorNullFileNameError() {
         when(mockLogFile.getFileName()).thenReturn(null);
         try (MockedStatic<FileSearcher> mockedFileStatic = Mockito.mockStatic(FileSearcher.class);

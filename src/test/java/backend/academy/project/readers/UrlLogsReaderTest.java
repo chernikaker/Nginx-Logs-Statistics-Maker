@@ -74,6 +74,22 @@ public class UrlLogsReaderTest {
     }
 
     @Test
+    public void OnlyInvalidLogLineTest() {
+        try (MockedStatic<HttpClient> mockedStaticHttpClient = Mockito.mockStatic(HttpClient.class)) {
+            mockedStaticHttpClient.when(HttpClient::newHttpClient).thenReturn(mockHttpClient);
+            when(mockHttpResponse.body()).thenReturn(INVALID_LOG);
+            when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(mockHttpResponse);
+            reader = new UrlLogsReader(MOCK_URL);
+            List<LogRecord> result = assertDoesNotThrow(() -> reader.readLogLines().toList());
+            assertEquals(0, result.size());
+            List<String> logSourceNames = reader.getLogSourceNames();
+            assertEquals(0, logSourceNames.size());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     public void CallingFilenamesGettingBeforeLogsReadingTest() {
         reader = new UrlLogsReader(MOCK_URL);
         List<String> fileNames = reader.getLogSourceNames();

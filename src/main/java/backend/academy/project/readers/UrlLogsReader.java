@@ -21,12 +21,13 @@ public class UrlLogsReader extends LogsReader {
 
     @Override
     public Stream<LogRecord> readLogLines() {
+        logSourceNames.clear();
         try {
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(path))
-            .header("User-Agent", USER_AGENT)
-            .GET()
-            .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(path))
+                .header("User-Agent", USER_AGENT)
+                .GET()
+                .build();
 
             Stream<LogRecord> logs = httpClient
                 .send(request, HttpResponse.BodyHandlers.ofString())
@@ -34,12 +35,13 @@ public class UrlLogsReader extends LogsReader {
                 .lines()
                 .map(tryParseLog)
                 .filter(Objects::nonNull);
-            logSourceNames.add(path);
+            // в случае успешной обработки строк ответа в логи добавляем его в информацию
+            if (logLinesProcessedPerFile > 0) {
+                logSourceNames.add(path);
+            }
             return logs;
-
         } catch (Exception e) {
             throw new ReadingFromUrlException("Error while reading log lines from " + path, e);
         }
     }
-
 }
