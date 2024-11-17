@@ -4,7 +4,7 @@ import backend.academy.project.commandline.OutputFileType;
 
 public class SimpleWriterFactory {
 
-    public StatisticsWriter createWriter(OutputFileType fileType, String filename) {
+    public static StatisticsWriter createWriter(OutputFileType fileType, String filename) {
         return switch (fileType) {
             case MARKDOWN -> new MarkdownStatisticsWriter(filename);
             case ADOC -> new AdocStatisticsWriter(filename);
