@@ -25,6 +25,7 @@ public class CommandLineArgsValidator {
     }
 
     /**
+     * Валидирует даты
      * @param from начальная дата
      * @param to конечная дата
      * @throws DateValidationException Когда конечная дата раньше начальной
@@ -36,6 +37,7 @@ public class CommandLineArgsValidator {
     }
 
     /**
+     * Валидирует параметры фильтрации
      * @param filterField поле для фильтрации
      * @param filterValue регулярное выражение для фильтрации
      * @throws FilterValidationException Когда было введено только поле или только значение
@@ -64,6 +66,7 @@ public class CommandLineArgsValidator {
     }
 
     /**
+     * Валидирует путь к логам
      * @param path шаблон пути к локальным файлам или URL
      * @throws EmptyPathValidationException когда путь пустой
      */

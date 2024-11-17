@@ -1,10 +1,9 @@
 package backend.academy.project.logs;
 
 import backend.academy.project.commandline.FilterFieldType;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import java.time.LocalDateTime;
-
 
 @Getter
 @AllArgsConstructor
